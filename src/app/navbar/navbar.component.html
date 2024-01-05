@@ -1,10 +1,12 @@
-<mat-toolbar color="primary" *ngIf="headerVisible">
+<mat-toolbar color="primary" >
     <mat-toolbar-row>
         <button (click)="drawer.toggle()" mat-icon-button>
             <mat-icon>menu</mat-icon>
     </button>
     <span>Ventas</span>
     <span class="example-spacer"></span>
+    <button routerLink="" mat-button>Inicio</button>
+    <button mat-button>Prodcutos</button>
     
     <input  placeholder="Buscar..." (change)="filtro($event)">
     
@@ -17,13 +19,13 @@
 </mat-toolbar>
 
 <mat-drawer-container autosize>
-    <mat-drawer #drawer opened="false" mode="side" position="start">
+    <mat-drawer #drawer opened="true" mode="side" position="start">
         <mat-nav-list>
             <mat-list-item>
                 <button routerLink="card" mat-button><mat-icon>dashboard</mat-icon> Dashboard</button>
             </mat-list-item>
             <mat-list-item>
-                <button routerLink="" mat-button><mat-icon>listall</mat-icon> Compañias</button>
+                <button routerLink="" mat-button><mat-icon>listall</mat-icon> Compañoias</button>
             </mat-list-item>
             <mat-list-item>
                 <button routerLink="" mat-button><mat-icon>listall</mat-icon> Usuarios</button>
@@ -41,11 +43,8 @@
         </mat-nav-list>
     </mat-drawer>
     <mat-drawer-content>
-        <div style="text-align: start;min-height: 600px;">
+        <div style="text-align: center;min-height: 600px;">
 
-            <router-outlet>
-                
-            </router-outlet>
 
         </div>
     </mat-drawer-content>
