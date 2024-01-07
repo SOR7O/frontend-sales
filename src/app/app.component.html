@@ -1,3 +1,4 @@
+
 <mat-toolbar color="primary" *ngIf="headerVisible">
     <mat-toolbar-row>
         <button (click)="drawer.toggle()" mat-icon-button>
@@ -10,7 +11,7 @@
     
     
     <button (click)="badgevisibility()" mat-icon-button>
-        <mat-icon aria-hidden="false" matBadgeColor="accent" matBadge="15" [matBadgeHidden]="badgevisible"
+        <mat-icon aria-hidden="false" matBadgeColor="accent" matBadge="0" [matBadgeHidden]="badgevisible"
         matBadgeSize="small">notifications</mat-icon>
     </button>
 </mat-toolbar-row>
@@ -20,10 +21,13 @@
     <mat-drawer #drawer opened="false" mode="side" position="start">
         <mat-nav-list>
             <mat-list-item>
-                <button routerLink="card" mat-button><mat-icon>dashboard</mat-icon> Dashboard</button>
+               <a href="" routerLink="/dashboard"></a> <button  mat-button><mat-icon>dashboard</mat-icon> Dashboard</button>
             </mat-list-item>
             <mat-list-item>
-                <button routerLink="" mat-button><mat-icon>listall</mat-icon> Compañias</button>
+                <a  routerLink="/company" >
+
+                    <button mat-button><mat-icon>listall</mat-icon> Compañias</button>
+                </a>
             </mat-list-item>
             <mat-list-item>
                 <button routerLink="" mat-button><mat-icon>listall</mat-icon> Usuarios</button>

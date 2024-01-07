@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, CanActivateFn,Router, RouterStateSnapshot } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 
 
 @Injectable({
@@ -7,21 +8,20 @@ import { ActivatedRouteSnapshot, CanActivate, CanActivateFn,Router, RouterStateS
 })
 export class AuthGuard implements CanActivate {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router,private cookie:CookieService) { }
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    let auth = false;
-
-    if (sessionStorage) {
-      const token = sessionStorage.getItem('token');
-      auth = !!token; // Use the double-bang operator to convert to boolean
+    let token= this.cookie.get("token")
+    let auth=false;
+    console.log("aaa2" + token);
+    if (token) {
+      return true; // Use the double-bang operator to convert to boolean
     }
 
-    if (!auth) {
+    else{
       // If authentication fails, redirect to a login page or any other desired route
       this.router.navigate(['/login']); // Adjust the route accordingly
-
+      return false
     }
 
-    return auth;
   }
 }

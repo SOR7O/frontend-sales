@@ -1,0 +1,26 @@
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+}
+
+.dollar-icon {
+  font-size: 24px;
+  color: #999;
+}
+
+.loading-animation {
+  background: linear-gradient(to right, #999 0%, #999 50%, transparent 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: loading 1.5s linear infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}

@@ -3,6 +3,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './auth-guard.guard';
 import { CompaniaComponent } from './compania/compania.component';
+import { LoadingComponent } from './loading/loading.component';
 
 export const routes: Routes = [
     { path: '', component: DashboardComponent ,pathMatch:'full'},

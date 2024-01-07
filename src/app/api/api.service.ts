@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { HttpClient, HttpHeaders } from "@angular/common/http"
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http"
+import {CookieService} from "ngx-cookie-service"
 @Injectable({
   providedIn: 'root'
 })
@@ -8,11 +9,12 @@ export class ApiService {
   public isLoggedInSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public isLoggedIn$: Observable<boolean> = this.isLoggedInSubject.asObservable();
   private apiUrl = 'http://localhost:3000/'; // Replace with your API endpoint
-  // private token= sessionStorage.getItem("token");
+  public token=this.cookie.get("token")
+  private params= new HttpParams();
   private headers = new HttpHeaders()
     .set('content-type', 'application/json')
-    .set('Access-Control-Allow-Origin', '*').set('x-access-token', sessionStorage?.getItem("token"));
-  constructor(private http: HttpClient) {
+    .set('Access-Control-Allow-Origin', '*').set('x-access-token', this.token);
+  constructor(private http: HttpClient, private cookie:CookieService) {
   }
 
   public getIsAuth(): Observable<boolean> {
@@ -26,11 +28,20 @@ export class ApiService {
   }
   // Peticiones de companias
   getCompanias(): Observable<any> {
-    let data;
-    if (typeof sessionStorage !== 'undefined') {
 
-      data = this.http.get<any>(`${this.apiUrl}compania/getCompanias`, { headers: this.headers });
-    }
-    return data;
+      return  this.http.get<any>(`${this.apiUrl}compania/getCompanias`, { headers: this.headers });
+    
+    
+  }
+
+  createCompania(data){
+    return this.http.post(this.apiUrl+"compania/createCompania",data,{headers:this.headers});
+  }
+    updateCompania(data){
+    return this.http.post(this.apiUrl+"compania/updateCompania",data,{headers:this.headers});
+  }
+  deleteCompania(data){
+
+    return this.http.post(this.apiUrl+"compania/deleteCompania",data,{headers:this.headers});
   }
 }

@@ -11,6 +11,8 @@ import { MatSidenavModule } from '@angular/material/sidenav'
 import { MatListModule } from '@angular/material/list'
 import { MatBadgeModule } from '@angular/material/badge'
 import { MatFormFieldModule } from '@angular/material/form-field'
+import { CookieService } from 'ngx-cookie-service';
+import { LoadingComponent } from './loading/loading.component';
 
 
 
@@ -18,6 +20,7 @@ import { MatFormFieldModule } from '@angular/material/form-field'
   selector: 'app-root',
   standalone: true,
   imports: [CommonModule, RouterOutlet, MatToolbarModule, 
+    LoadingComponent,
     MatIconModule, 
     MatButtonModule, 
     MatMenuModule, 
@@ -34,20 +37,12 @@ export class AppComponent implements OnChanges,OnInit{
   badgevisible = false;
   headerVisible=false;
 
-  constructor(private router:Router){
-
-    
-    
-    if (typeof sessionStorage !== 'undefined') {
-      
-      console.log("aqui45");
-      this.headerVisible=sessionStorage.getItem("token")?true:false;
-      sessionStorage.getItem("token")?true:this.router.navigate(['/login']);
-    } else{
-      console.log("aqui45");
-      this.router.navigate(['/login']);
+  constructor(private router:Router,private cookie:CookieService){
+    if(this.cookie.get("token")){
+      this.headerVisible=true;
     }
-    console.log("aqui2");
+    console.log("lo cargoo");
+    
   }
   ngOnChanges(changes: SimpleChanges): void {
     console.log("initChanges");
@@ -55,6 +50,9 @@ export class AppComponent implements OnChanges,OnInit{
   }
   ngOnInit(): void {
       console.log("init");
+          if(this.cookie.get("token")){
+      this.headerVisible=true;
+    }
       
   }
   badgevisibility() {

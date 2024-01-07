@@ -24,6 +24,7 @@ import { NavigationExtras, Router } from '@angular/router';
 })
 export class CompaniaComponent implements OnInit {
   private destroy$: Subject<void> = new Subject<void>();
+  public update=false;
  
  public companyForm = new FormGroup({
     _id: new FormControl('', [Validators.required, Validators.minLength(1)]),
@@ -86,8 +87,22 @@ export class CompaniaComponent implements OnInit {
 
   }
   onSubmit(){
-    console.log(this.companyForm.value);
-    
+    if(!this.update){
+
+      this.api.createCompania(this.companyForm.value).pipe(take(1)).subscribe((response)=>{
+
+        this.companyForm.reset();
+        
+      })
+    }else{
+      this.api.updateCompania(this.companyForm.value).pipe(take(1)).subscribe((up)=>{
+        console.log("updated");
+        console.log(up);
+        this.companyForm.reset();
+        
+      })
+    }
+         this.getCompania();
   } 
   edit(row){
 
@@ -95,12 +110,17 @@ export class CompaniaComponent implements OnInit {
     console.log(row);
 
     this.companyForm.patchValue(row)
-    console.log(this.companyForm.value);
+    this.update=true;
     
   }
   
   delete(row){
     console.log(row);
+    
+    this.api.deleteCompania(row).pipe(take(1)).subscribe((res)=>{
+      this.getCompania();
+      
+    })
   }
   navigateAndRefresh() {
     this.getCompania();
