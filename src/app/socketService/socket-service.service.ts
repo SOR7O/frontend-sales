@@ -35,5 +35,15 @@ export class SocketServiceService {
       })
     });
   }
+  listenConfirmarPedido(){
+    return new Observable((subscribe) => {
+      this.socket.on("pedidoConfirmado", (valor) => {
+        subscribe.next(valor);
+      })
+    });
+  }
+  emitConfirmacionPedido(data){
+    this.socket.emit("confirmarPedido",data)
+  }
 
 }

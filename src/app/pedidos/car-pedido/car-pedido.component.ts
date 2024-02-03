@@ -5,6 +5,7 @@ import { SocketServiceService } from '../../socketService/socket-service.service
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { ApiService } from '../../api/api.service';
 
 @Component({
   selector: 'app-car-pedido',
@@ -23,8 +24,6 @@ displayedColumns=[
   'total'
 ];
 delete(element) {
-  
-  
   let idx= this.dataSource.indexOf(element);
   
   this.dataSource.splice(idx,1)
@@ -41,7 +40,7 @@ delete(element) {
 }
 
 dataSource=[];
-  constructor(private lsts: ShopcarService, private socket: SocketServiceService) {
+  constructor(private lsts: ShopcarService, private socket: SocketServiceService, private service:ApiService) {
 
   }
   ngAfterViewInit(): void {

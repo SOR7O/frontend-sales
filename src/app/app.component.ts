@@ -32,8 +32,9 @@ import { ToastrService } from "ngx-toastr";
 import { ShopcarService } from "./productos/shopcar/shopcar.service";
 import { SocketServiceService } from "./socketService/socket-service.service";
 import {MatAccordion, MatExpansionModule} from '@angular/material/expansion'
-import { Subject, debounceTime, fromEvent } from "rxjs";
+import { Subject, debounceTime, fromEvent, take } from "rxjs";
 import { CarPedidoComponent } from "./pedidos/car-pedido/car-pedido.component";
+import { ApiService } from "./api/api.service";
 
 @Component({
   selector: "app-root",
@@ -67,9 +68,7 @@ import { CarPedidoComponent } from "./pedidos/car-pedido/car-pedido.component";
 export class AppComponent implements OnChanges, OnInit,AfterViewInit {
   toUpdate: boolean;
 
-confirmar() {
-throw new Error('Method not implemented.');
-}
+
   @ViewChild(MatAccordion) accordion: MatAccordion;
   title = "Ventas";
 
@@ -89,7 +88,8 @@ throw new Error('Method not implemented.');
     private cookie: CookieService,
     private toastr: ToastrService,
     private serLocal: ShopcarService,
-    private socketService: SocketServiceService
+    private socketService: SocketServiceService,
+    private service:ApiService
   ) {
 
     const ngZone = ɵglobal.Zone;
@@ -127,6 +127,21 @@ throw new Error('Method not implemented.');
       modelDiv.style.display = "none";
 
     }
+  }
+  confirmar() {
+    let  pedido=this.serLocal.getItem('pedido');
+    this.service.createPedido(pedido).pipe(take(1)).subscribe((resp)=>{
+      console.log(resp);
+      if(resp['type']=="ok"){
+        this.toastr.success("Pedido enviado");
+        this.socketService.test(0);
+        this.CloseModel();
+        this.serLocal.removeItem('pedido');
+      }
+    },error=>{
+      console.log(error);
+      
+    });
   }
   openModel() {
     const modelDiv = document.getElementById("myModalPedido");

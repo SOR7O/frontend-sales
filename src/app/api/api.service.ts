@@ -16,6 +16,7 @@ export class ApiService {
   // private apiUrl = "http://34.224.221.93:3000/"; // Replace with your API endpoint
   private apiUrl = "http://localhost:3000/"; // Replace with your API endpoint
   private urlProducto = this.apiUrl + "producto";
+  private urlPedido = this.apiUrl + "pedido";
   public token = this.cookie.get("token");
 
   httpOptions = {
@@ -154,5 +155,36 @@ export class ApiService {
   updateProducto(data): Observable<any> {
     let url = this.urlProducto + "/updateProducto";
     return this.http.post(url, data, { headers: this.headers });
+  }
+  
+  //CRUD PEDIDOS
+  createPedido(data){
+    return this.http.post(this.urlPedido + "/addPedido", data, {
+      headers: this.headers,
+    });
+  }
+  getPedidosByUser() :Observable < any >{
+    let id=this.lsto.getItem("idUser")
+    let data={id:id}
+  return this.http.post<any>(this.urlPedido + "/getPedidosByUser", data, {
+      headers: this.headers,
+    });
+  }
+  getPedidosByCompania() :Observable < any >{
+    let id=this.lsto.getItem("idCompania")
+    let data={id:id}
+    return this.http.post(this.urlPedido + "/getPedidosByCompania", data, {
+      headers: this.headers,
+    });
+  }
+  updatePedido(data) :Observable < any >{
+    return this.http.post(this.urlPedido + "/updatePedido", data, {
+      headers: this.headers,
+    });
+  }
+  delete(data) :Observable < any >{
+    return this.http.post(this.urlPedido + "/deletePedido", data, {
+      headers: this.headers,
+    });
   }
 }

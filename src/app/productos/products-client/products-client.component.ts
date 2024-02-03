@@ -29,6 +29,7 @@ interface Products {
   styleUrl: "./products-client.component.css",
 })
 export class ProductsClientComponent implements OnInit {
+
   @Input() fromProducts: string;
   @ViewChildren('popoverItem')
   public popoverItem!: QueryList<ElementRef<HTMLLIElement>>;
@@ -61,11 +62,12 @@ export class ProductsClientComponent implements OnInit {
     let subtotal = Number(precio * 1);
     let imp = Number(subtotal * 0.15);
     let total = Number(imp + subtotal);
+    let id = this.tempStorage.getItem('idUser')
 
     const prods: Products = {
       idProducto: data['_id'],
       nombre:data['nombre'],
-      idUsuario: '',
+      idUsuario: id,
       cantidad: 1, 
       subtotal: subtotal,
       total: total,
@@ -130,5 +132,9 @@ export class ProductsClientComponent implements OnInit {
         },
         (error) => { },
       );
+  }
+  setValue($event) {
+    console.log($event);
+    
   }
 }
