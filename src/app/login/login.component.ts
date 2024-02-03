@@ -9,6 +9,7 @@ import { MatButtonModule } from "@angular/material/button"
 import { BehaviorSubject, Observable, take } from 'rxjs';
 import { NavigationExtras, Router } from '@angular/router';
 import { CookieService } from "ngx-cookie-service";
+import { ShopcarService } from '../productos/shopcar/shopcar.service';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -24,9 +25,7 @@ export class LoginComponent implements OnInit {
     password: new FormControl('', [Validators.required, Validators.minLength(1)]),
   });
   login = false;
-  constructor(private api: ApiService, private router: Router, private cookie: CookieService) {
-    console.log(this.cookie.get("token"));
-    console.log(this.cookie.get("token").length==0);
+  constructor(private api: ApiService, private router: Router, private cookie: CookieService,private lst:ShopcarService) {
     
     if (this.cookie.get("token").length==0) {
       this.login = true;
@@ -48,8 +47,13 @@ export class LoginComponent implements OnInit {
 
           if (response['message'] == 'Logged in') {
             this.cookie.set("token", response["token"]);
-            this.router.navigate(['/dashboard']);
-            // window.location.reload();
+            this.lst.setItem('typeUser',response['typeUser'])
+            this.lst.setItem('idUser',response['idUser'])
+            this.lst.setItem('idCompania',response['idCompania'])
+            setTimeout(() => {
+              window.location.reload();
+            }, 3000);
+
           }
 
 
@@ -63,7 +67,6 @@ export class LoginComponent implements OnInit {
     }
   }
   ngOnInit(): void {
-    console.log("111");
 
   }
 }

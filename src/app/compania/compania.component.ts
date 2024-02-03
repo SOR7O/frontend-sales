@@ -6,27 +6,27 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDividerModule } from '@angular/material/divider';
-import {MatGridListModule} from '@angular/material/grid-list';
-import {MatRadioModule} from '@angular/material/radio';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatRadioModule } from '@angular/material/radio';
 
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 
 import { ApiService } from '../api/api.service';
-import { take ,pipe, takeUntil, Subject} from 'rxjs';
+import { take, pipe, takeUntil, Subject } from 'rxjs';
 import { NavigationExtras, Router } from '@angular/router';
 // import {} from("@angular/material/table")
 @Component({
   selector: 'app-compania',
   standalone: true,
-  imports: [MatTableModule, MatIconModule, MatButtonModule, MatInputModule,MatCardModule,MatProgressBarModule,MatRadioModule,MatDividerModule,MatGridListModule,ReactiveFormsModule],
+  imports: [MatTableModule, MatIconModule, MatButtonModule, MatInputModule, MatCardModule, MatProgressBarModule, MatRadioModule, MatDividerModule, MatGridListModule, ReactiveFormsModule],
   templateUrl: './compania.component.html',
   styleUrl: './compania.component.css'
 })
 export class CompaniaComponent implements OnInit {
   private destroy$: Subject<void> = new Subject<void>();
-  public update=false;
- 
- public companyForm = new FormGroup({
+  public update = false;
+
+  public companyForm = new FormGroup({
     _id: new FormControl('', [Validators.required, Validators.minLength(1)]),
     nombre: new FormControl('', [Validators.required, Validators.minLength(1)]),
     fecha: new FormControl('', [Validators.required, Validators.minLength(1)]),
@@ -38,7 +38,7 @@ export class CompaniaComponent implements OnInit {
     password: new FormControl('', [Validators.required, Validators.minLength(1)]),
     is_activated: new FormControl(),
   });
-  public showLoading=true;
+  public showLoading = true;
   displayedColumns: string[] = [
     "acciones",
     "nombre",
@@ -54,7 +54,7 @@ export class CompaniaComponent implements OnInit {
   // ];
   // dataSource2 = [];
   dataSource = new MatTableDataSource();
-  constructor(private api: ApiService,private router:Router) {
+  constructor(private api: ApiService, private router: Router) {
     // this.getCompania();
   }
   ngOnInit(): void {
@@ -66,17 +66,17 @@ export class CompaniaComponent implements OnInit {
   getCompania() {
 
 
-     this.api.getCompanias().pipe(takeUntil(this.destroy$)).subscribe((response) => {
+    this.api.getCompanias().pipe(takeUntil(this.destroy$)).subscribe((response) => {
       console.log("data");
       console.log(response);
-      
-      
+
+
       if (response['type'] == "ok" && response['data'].length > 0) {
         const dataSource = [...response['data']]
-        this.dataSource= new MatTableDataSource(dataSource);
-      }else{
-        const dataSource=[...[]]
-        this.dataSource= new MatTableDataSource(dataSource);
+        this.dataSource = new MatTableDataSource(dataSource);
+      } else {
+        const dataSource = [...[]]
+        this.dataSource = new MatTableDataSource(dataSource);
       }
 
     })
@@ -86,40 +86,40 @@ export class CompaniaComponent implements OnInit {
     this.dataSource.filter = filtro.trim().toLowerCase();
 
   }
-  onSubmit(){
-    if(!this.update){
+  onSubmit() {
+    if (!this.update) {
 
-      this.api.createCompania(this.companyForm.value).pipe(take(1)).subscribe((response)=>{
+      this.api.createCompania(this.companyForm.value).pipe(take(1)).subscribe((response) => {
 
         this.companyForm.reset();
-        
+
       })
-    }else{
-      this.api.updateCompania(this.companyForm.value).pipe(take(1)).subscribe((up)=>{
+    } else {
+      this.api.updateCompania(this.companyForm.value).pipe(take(1)).subscribe((up) => {
         console.log("updated");
         console.log(up);
         this.companyForm.reset();
-        
+
       })
     }
-         this.getCompania();
-  } 
-  edit(row){
+    this.getCompania();
+  }
+  edit(row) {
 
-    row['fecha']=new Date().toISOString().slice(0, 10)
+    row['fecha'] = new Date().toISOString().slice(0, 10)
     console.log(row);
 
     this.companyForm.patchValue(row)
-    this.update=true;
-    
+    this.update = true;
+
   }
-  
-  delete(row){
+
+  delete(row) {
     console.log(row);
-    
-    this.api.deleteCompania(row).pipe(take(1)).subscribe((res)=>{
+
+    this.api.deleteCompania(row).pipe(take(1)).subscribe((res) => {
       this.getCompania();
-      
+
     })
   }
   navigateAndRefresh() {

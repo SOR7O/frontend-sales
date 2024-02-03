@@ -1,0 +1,63 @@
+<!-- <table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Acciones</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Cantidad</th>
+            <th scope="col">Sub-total</th>
+            <th scope="col">Impuesto</th>
+            <th scope="col">total</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{productos.length}}
+
+        <tr *ngFor="let prd of productos">
+            <th scope="row"><button class="btn btn-danger">x</button></th>
+            <th>{{prd.nombre}}</th>
+            <td>{{prd.cantidad}}</td>
+            <td>{{prd.subtotal}}</td>
+            <td>{{prd.impuesto}}</td>
+            <td>{{prd.total}}</td>
+            <td></td>
+        </tr>
+    </tbody>
+</table> -->
+
+
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8 data-table">
+    <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef>Acciones </th>
+        <td mat-cell *matCellDef="let element">
+
+            <button (click)="delete(element)" mat-icon-button color="warn" aria-label="Example icon button with a heart icon">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nombre">
+        <th mat-header-cell *matHeaderCellDef>Nombre </th>
+        <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
+    </ng-container>
+    <ng-container matColumnDef="cantidad">
+        <th mat-header-cell *matHeaderCellDef>Cantidad </th>
+        <td mat-cell *matCellDef="let element"> {{element.cantidad | number }} </td>
+    </ng-container>
+    <ng-container matColumnDef="subtotal">
+        <th mat-header-cell *matHeaderCellDef>Sub-total </th>
+        <td mat-cell *matCellDef="let element"> {{element.subtotal | number}} </td>
+    </ng-container>
+    <ng-container matColumnDef="impuesto">
+        <th mat-header-cell *matHeaderCellDef>Impuesto </th>
+        <td mat-cell *matCellDef="let element"> {{element.impuesto | number}} </td>
+    </ng-container>
+    <ng-container matColumnDef="total">
+        <th mat-header-cell *matHeaderCellDef>Total </th>
+        <td mat-cell *matCellDef="let element"> {{element.total | number}} </td>
+    </ng-container>
+
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

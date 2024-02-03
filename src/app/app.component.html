@@ -1,56 +1,90 @@
-
 <mat-toolbar color="primary" *ngIf="headerVisible">
     <mat-toolbar-row>
         <button (click)="drawer.toggle()" mat-icon-button>
             <mat-icon>menu</mat-icon>
-    </button>
-    <span>Ventas</span>
-    <span class="example-spacer"></span>
-    
-    <input  placeholder="Buscar..." (change)="filtro($event)">
-    
-    
-    <button (click)="badgevisibility()" mat-icon-button>
-        <mat-icon aria-hidden="false" matBadgeColor="accent" matBadge="0" [matBadgeHidden]="badgevisible"
-        matBadgeSize="small">notifications</mat-icon>
-    </button>
-</mat-toolbar-row>
+        </button>
+        <span>Ventas</span>
+        <span class="example-spacer"></span>
+
+        <button (click)="openModel()" mat-icon-button>
+            <mat-icon aria-hidden="false" matBadgeColor="accent" matBadge="{{badgeCounter}}"
+                [matBadgeHidden]="badgevisible" matBadgeSize="small">shopping_cart</mat-icon>
+        </button>
+
+    </mat-toolbar-row>
 </mat-toolbar>
 
 <mat-drawer-container autosize>
     <mat-drawer #drawer opened="false" mode="side" position="start">
         <mat-nav-list>
             <mat-list-item>
-               <a href="" routerLink="/dashboard"></a> <button  mat-button><mat-icon>dashboard</mat-icon> Dashboard</button>
+                <a href="" routerLink="/dashboard"></a>
+                <button mat-button>
+                    <mat-icon>dashboard</mat-icon> Dashboard
+                </button>
             </mat-list-item>
             <mat-list-item>
-                <a  routerLink="/company" >
-
-                    <button mat-button><mat-icon>listall</mat-icon> Compañias</button>
+                <a routerLink="/company">
+                    <button mat-button>
+                        <mat-icon>listall</mat-icon> Compañias
+                    </button>
                 </a>
             </mat-list-item>
             <mat-list-item>
-                <button routerLink="" mat-button><mat-icon>listall</mat-icon> Usuarios</button>
-            </mat-list-item>
-
-            <mat-list-item>
-                <button routerLink="" mat-button><mat-icon>inventory</mat-icon> Productos</button>
+                <button routerLink="/clientes" mat-button>
+                    <mat-icon>user</mat-icon> Clientes
+                </button>
             </mat-list-item>
             <mat-list-item>
-                <button routerLink="" mat-button><mat-icon>listall</mat-icon> Inventario</button>
+                <button routerLink="/productos" mat-button>
+                    <mat-icon>inventory</mat-icon> Productos
+                </button>
             </mat-list-item>
             <mat-list-item>
-                <button mat-button><mat-icon>analytics</mat-icon> analytics</button>
+                <button routerLink="" mat-button>
+                    <mat-icon>listall</mat-icon> Inventario
+                </button>
+            </mat-list-item>
+            <mat-list-item>
+                <button mat-button>
+                    <mat-icon>analytics</mat-icon> analytics
+                </button>
             </mat-list-item>
         </mat-nav-list>
     </mat-drawer>
     <mat-drawer-content>
-        <div style="text-align: start;min-height: 600px;">
-
-            <router-outlet>
-                
-            </router-outlet>
-
+        <div style="text-align: start; min-height: 600px">
+            <router-outlet> </router-outlet>
         </div>
     </mat-drawer-content>
 </mat-drawer-container>
+
+
+<!-- The Modal -->
+<div class="modal bd-example-modal-lg" id="myModalPedido"   tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Confirmar pedido</h4>
+                <button type="button" (click)="CloseModel()" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <app-car-pedido></app-car-pedido>
+                
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" (click)="confirmar()" class="btn btn-success" data-bs-dismiss="modal">
+                    Confirmar
+                </button>
+                <button type="button" (click)="CloseModel()" class="btn btn-danger" data-bs-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
