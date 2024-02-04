@@ -37,7 +37,7 @@ export class SocketServiceService {
   }
   listenConfirmarPedido(){
     return new Observable((subscribe) => {
-      this.socket.on("pedidoConfirmado", (valor) => {
+      this.socket.on("Pedidoconfirmado", (valor) => {
         subscribe.next(valor);
       })
     });

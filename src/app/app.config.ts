@@ -1,16 +1,70 @@
-import { ApplicationConfig } from "@angular/core";
-import { provideRouter, withInMemoryScrolling } from "@angular/router";
+import { ApplicationConfig, importProvidersFrom } from "@angular/core";
+import { RouterLink, RouterLinkActive, RouterOutlet, provideRouter, withInMemoryScrolling } from "@angular/router";
 
 import { routes } from "./app.routes";
-import { provideClientHydration } from "@angular/platform-browser";
-import { provideAnimations } from "@angular/platform-browser/animations";
-import { provideHttpClient, withFetch } from "@angular/common/http";
+import { BrowserModule, provideClientHydration } from "@angular/platform-browser";
+import {MatMenuModule} from "@angular/material/menu";
+import {MatButtonModule} from "@angular/material/button";
+import {MatIconModule} from "@angular/material/icon";
+import {MatCardModule} from "@angular/material/card";
+import {MatTabsModule} from "@angular/material/tabs";
+import {MatDrawerContent, MatSidenavModule} from "@angular/material/sidenav";
+import {MatListModule} from "@angular/material/list";
+import {MatToolbarModule} from "@angular/material/toolbar";
+import {MatInputModule} from "@angular/material/input";
+import {MatTableModule} from "@angular/material/table";
+import {MatPaginatorModule} from "@angular/material/paginator";
+import {MatSortModule} from "@angular/material/sort";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatSelectModule} from "@angular/material/select";
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {ReactiveFormsModule} from "@angular/forms";
+
+import {provideAnimations} from "@angular/platform-browser/animations";
+import {provideHttpClient, withFetch, withInterceptorsFromDi} from "@angular/common/http";
 import { provideToastr } from "ngx-toastr";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatBadgeModule } from "@angular/material/badge";
+import { CommonModule } from "@angular/common";
+import { MatSnackBarModule } from "@angular/material/snack-bar";
 
 export const appConfig: ApplicationConfig = {
+
   // required animations providers
   providers: [
-    
+    importProvidersFrom(BrowserModule,
+      MatMenuModule,
+      MatButtonModule,
+      MatIconModule,
+      MatCardModule,
+      MatSidenavModule,
+      MatListModule,
+      MatToolbarModule,
+      MatMenuModule,
+      RouterLink,
+      RouterLinkActive,
+      MatIconModule,
+      MatToolbarModule,
+      RouterOutlet,
+      CommonModule,
+      MatSnackBarModule,
+      MatInputModule,
+      MatTableModule,
+      MatPaginatorModule,
+      MatSortModule,
+      MatDialogModule,
+      MatFormFieldModule,
+      MatBadgeModule,
+      MatListModule,
+      MatSidenavModule,
+      MatSelectModule,
+      MatDatepickerModule,
+      MatProgressSpinnerModule,
+      MatTabsModule,
+      MatDrawerContent,
+      ReactiveFormsModule),
+      
     // provideClientHydration(),
 
     provideToastr({
@@ -25,8 +79,9 @@ export const appConfig: ApplicationConfig = {
         anchorScrolling: "enabled",
       }),
     ),
-    provideClientHydration(),
     provideAnimations(),
     provideHttpClient(),
+    provideClientHydration(),
+    
   ],
 };

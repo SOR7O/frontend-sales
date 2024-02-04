@@ -35,6 +35,7 @@ import {MatAccordion, MatExpansionModule} from '@angular/material/expansion'
 import { Subject, debounceTime, fromEvent, take } from "rxjs";
 import { CarPedidoComponent } from "./pedidos/car-pedido/car-pedido.component";
 import { ApiService } from "./api/api.service";
+import Swal from 'sweetalert2';
 
 @Component({
   selector: "app-root",
@@ -140,6 +141,12 @@ export class AppComponent implements OnChanges, OnInit,AfterViewInit {
       }
     },error=>{
       console.log(error);
+      
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: "Ha ocurrido un error",
+      })
       
     });
   }

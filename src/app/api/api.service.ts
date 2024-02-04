@@ -125,19 +125,19 @@ export class ApiService {
     let idCompania = this.lsto.getItem("idCompania");
     data.idUser = idUser;
     data.idCompania = idCompania;
-    console.log(data);
+    
 
     return this.http.post(this.urlProducto + "/addProducto", data, {
       headers: this.headers,
     });
   }
   getProductoByCompania(data): Observable<any> {
-    
+
     let idCompania = this.lsto.getItem("idCompania");
     data["id"] = idCompania;
     let url = this.urlProducto + "/getProductoByCompania";
-    data.test = "test";
-    console.log(data);
+
+    
 
     return this.http.post<any>(url, data, { headers: this.headers });
   }
@@ -156,33 +156,46 @@ export class ApiService {
     let url = this.urlProducto + "/updateProducto";
     return this.http.post(url, data, { headers: this.headers });
   }
-  
+
   //CRUD PEDIDOS
-  createPedido(data){
-    return this.http.post(this.urlPedido + "/addPedido", data, {
+  createPedido(data) {
+    let body = {
+      'idUsuario': this.lsto.getItem('idUser'),
+      'idCompania': this.lsto.getItem('idCompania'),
+      data:data
+
+    }
+    
+
+    return this.http.post(this.urlPedido + "/addPedido", body, {
       headers: this.headers,
     });
   }
-  getPedidosByUser() :Observable < any >{
-    let id=this.lsto.getItem("idUser")
-    let data={id:id}
-  return this.http.post<any>(this.urlPedido + "/getPedidosByUser", data, {
+  getPedidosByUser(): Observable<any> {
+    let id = this.lsto.getItem("idUser")
+    let data = { id: id }
+    return this.http.post<any>(this.urlPedido + "/getPedidosByUser", data, {
       headers: this.headers,
     });
   }
-  getPedidosByCompania() :Observable < any >{
-    let id=this.lsto.getItem("idCompania")
-    let data={id:id}
+  getPedidosByCompania(): Observable<any> {
+    let id = this.lsto.getItem("idCompania")
+    let data = { id: id }
     return this.http.post(this.urlPedido + "/getPedidosByCompania", data, {
       headers: this.headers,
     });
   }
-  updatePedido(data) :Observable < any >{
+  updatePedido(data): Observable<any> {
     return this.http.post(this.urlPedido + "/updatePedido", data, {
       headers: this.headers,
     });
   }
-  delete(data) :Observable < any >{
+  updatePedidoEstado(data): Observable<any> {
+    return this.http.post(this.urlPedido + "/updatePedidoEstado", data, {
+      headers: this.headers,
+    });
+  }
+  delete(data): Observable<any> {
     return this.http.post(this.urlPedido + "/deletePedido", data, {
       headers: this.headers,
     });

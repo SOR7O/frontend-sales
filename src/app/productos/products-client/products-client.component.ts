@@ -12,12 +12,11 @@ import { Popover } from "bootstrap";
 
 interface Products {
   idProducto: string;
-  idUsuario: string;
   cantidad: number;
   subtotal: number;
   total: number;
-  nombre:string,
-  impuesto:number
+  nombre: string,
+  impuesto: number
 }
 
 
@@ -66,9 +65,7 @@ export class ProductsClientComponent implements OnInit {
 
     const prods: Products = {
       idProducto: data['_id'],
-      nombre:data['nombre'],
-      idUsuario: id,
-      cantidad: 1, 
+      nombre: data['nombre'], cantidad: 1,
       subtotal: subtotal,
       total: total,
       impuesto: imp
@@ -135,6 +132,6 @@ export class ProductsClientComponent implements OnInit {
   }
   setValue($event) {
     console.log($event);
-    
+
   }
 }
