@@ -21,7 +21,7 @@ import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { MatMenuModule, MatMenuTrigger } from "@angular/material/menu";
-import { MatSidenavModule } from "@angular/material/sidenav";
+import { MatSidenav, MatSidenavModule } from "@angular/material/sidenav";
 import { MatListModule } from "@angular/material/list";
 import { MatBadgeModule } from "@angular/material/badge";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -69,7 +69,11 @@ import { LocalService } from "./services/local.service";
 export class AppComponent implements OnChanges, OnInit,AfterViewInit {
   toUpdate: boolean;
 
-
+  @ViewChild('sidenav') sidenav: MatSidenav;
+  isExpanded = true;
+  showSubmenu: boolean = false;
+  isShowing = false;
+  showSubSubMenu: boolean = false;
   @ViewChild(MatAccordion) accordion: MatAccordion;
   title = "Ventas";
 
@@ -155,5 +159,16 @@ export class AppComponent implements OnChanges, OnInit,AfterViewInit {
   cancelarUpdate() {
     this.toUpdate = false;
 
+  }
+  mouseenter() {
+    if (!this.isExpanded) {
+      this.isShowing = true;
+    }
+  }
+
+  mouseleave() {
+    if (!this.isExpanded) {
+      this.isShowing = false;
+    }
   }
 }

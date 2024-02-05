@@ -23,27 +23,56 @@ export class FacturaService {
   getAll(): Observable<any> {
     return this.http.get(this.apiUrl);
   }
-
+//crud punto de emision
   getById(id: string): Observable<any> {
-    this.apiUrl=this.apiUrl+'getPuntosEmisionByCompania';
-    return this.http.get(`${this.apiUrl}/${id}`);
+    let apiUrl=this.apiUrl+'getPuntosEmisionByCompania';
+    return this.http.post(`${apiUrl}/${id}`,{id:id}, this.httpOptions);
   }
 
   create(data: any): Observable<any> {
-    this.apiUrl=this.apiUrl+'createPuntoEmision';
+    let apiUrl=this.apiUrl+'createPuntoEmision';
     data['idCompania']= this.localStorage.getItem('idCompania');
     console.log(data);
     
-    return this.http.post(this.apiUrl, data, this.httpOptions);
+    return this.http.post(apiUrl, data, this.httpOptions);
   }
 
   update(id: string, data: any): Observable<any> {
-    this.apiUrl=this.apiUrl+'updatePuntoEmision';
-    return this.http.put(`${this.apiUrl}/${id}`, data, this.httpOptions);
+    let apiUrl=this.apiUrl+'updatePuntoEmisionById';
+    console.log(this.apiUrl);
+    
+    return this.http.put(`${apiUrl}/${id}`, data, this.httpOptions);
   }
 
   delete(id: string): Observable<any> {
-    this.apiUrl=this.apiUrl+'deletePuntoEmisionById';
-    return this.http.delete(`${this.apiUrl}/${id}`, this.httpOptions);
+    let apiUrl=this.apiUrl+'deletePuntoEmisionById';
+    return this.http.delete(`${apiUrl}/${id}`, this.httpOptions);
   }
+
+  // crud Establecimiento
+  getEstablecimientoById(id: string): Observable<any> {
+    let apiUrl=this.apiUrl+'getEstablecimientoByCompania';
+    return this.http.post(`${apiUrl}/${id}`,{id:id}, this.httpOptions);
+  }
+
+  createEstablecimiento(data: any): Observable<any> {
+    let apiUrl=this.apiUrl+'createEstablecimiento';
+    data['idCompania']= this.localStorage.getItem('idCompania');
+    console.log(data);
+    
+    return this.http.post(apiUrl, data, this.httpOptions);
+  }
+
+  updatEstablecimientoe(id: string, data: any): Observable<any> {
+    let apiUrl=this.apiUrl+'updateEstablecimientoById';
+    console.log(this.apiUrl);
+    
+    return this.http.put(`${apiUrl}/${id}`, data, this.httpOptions);
+  }
+
+  deleteEstablecimiento(id: string): Observable<any> {
+    let apiUrl=this.apiUrl+'deleteEstablecimientoById';
+    return this.http.delete(`${apiUrl}/${id}`, this.httpOptions);
+  }
+
 }

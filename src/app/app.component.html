@@ -15,7 +15,7 @@
 </mat-toolbar>
 
 <mat-drawer-container autosize>
-    <mat-drawer #drawer opened="false" mode="side" position="start">
+    <mat-drawer #drawer opened="true" mode="side" position="start">
         <mat-nav-list>
             <mat-list-item>
                 <a href="" routerLink="/dashboard"></a>
@@ -35,11 +35,41 @@
                     <mat-icon>user</mat-icon> Clientes
                 </button>
             </mat-list-item>
-            <mat-list-item>
+            <mat-list-item (click)="showSubmenu = !showSubmenu; isShowing= !isShowing" class="parent">
+                <span class="full-width" *ngIf="isExpanded || isShowing"><mat-icon>list_alt</mat-icon> Facturas</span>
+            </mat-list-item>
+            <div  class="submenu" [ngClass]="{'expanded' : showSubmenu}" *ngIf="isShowing && isExpanded">
+               <mat-list-item>
+
+                   <button routerLink="/puntoemision" mat-button>
+                       <mat-icon>list</mat-icon> Cai
+                    </button>
+                </mat-list-item>
+                    <mat-list-item>
+
+                    <button routerLink="/puntoemision" mat-button>
+                        <mat-icon>home</mat-icon> Punto Emision
+                    </button>
+                </mat-list-item>
+                <mat-list-item>
+
+                    <button routerLink="/establecimientoFactura" mat-button>
+                        <mat-icon>shopping_cart</mat-icon> Establecimiento
+                    </button>
+                </mat-list-item>
+                <mat-list-item>
+
+                    <button routerLink="/puntoemision" mat-button>
+                        <mat-icon>folder</mat-icon> Tipo de documento
+                    </button>
+                </mat-list-item>
+
+			</div>
+            <!-- <mat-list-item>
                 <button routerLink="/puntoemision" mat-button>
                     <mat-icon>users</mat-icon> Punto Emision F
                 </button>
-            </mat-list-item>
+            </mat-list-item> -->
             <mat-list-item>
                 <button routerLink="/productos" mat-button>
                     <mat-icon>inventory</mat-icon> Productos
