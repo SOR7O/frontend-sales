@@ -19,8 +19,6 @@ export class SocketServiceService {
     this.socket = io(this.server);
     this.socket.on("connected", (val) => {
       
-      
-
     })
     this.socket.emit("joinSales", { "cookie": "test" });
   }
@@ -29,6 +27,10 @@ export class SocketServiceService {
 
   }
   listenPedidos(): Observable<any> {
+
+
+    
+    if(!this.socket)return null;
     return new Observable((subscribe) => {
       this.socket.on("pedidoAgregado", (valor) => {
         subscribe.next(valor);
@@ -36,6 +38,7 @@ export class SocketServiceService {
     });
   }
   listenConfirmarPedido(){
+    if(!this.socket)return null;
     return new Observable((subscribe) => {
       this.socket.on("Pedidoconfirmado", (valor) => {
         subscribe.next(valor);

@@ -3,7 +3,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ApiService } from '../api/api.service';
 import { SocketServiceService } from '../socketService/socket-service.service';
-import { ShopcarService } from '../productos/shopcar/shopcar.service';
 import { take } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
@@ -14,6 +13,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DetallePedidoComponent } from './detalle-pedido/detalle-pedido.component';
 import Swal from 'sweetalert2';
+import { ToastrService } from 'ngx-toastr';
+import { LocalService } from '../services/local.service';
 
 export interface PedidoShow {
   nameCompany: string,
@@ -56,7 +57,12 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   columnsToDisplayWithExpand = [...this.displayedColumns, 'expand'];
   expandedElement: PedidoShow | null;
 
-  constructor(private service: ApiService, private socket: SocketServiceService, private lcstr: ShopcarService, private dialog: MatDialog) { }
+  constructor(
+    private service: ApiService, 
+    private socket: SocketServiceService, 
+    private lcstr: LocalService, 
+    private dialog: MatDialog,
+    private toastr: ToastrService,) { }
 
   ngOnInit(): void {
 
@@ -70,7 +76,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.typeUser = this.lcstr.getItem('typeUser')
     this.displayedColumns[1] = this.typeUser == 1 || this.typeUser == 2 ? 'nombreCliente' : 'nameCompany'
-    console.log(this.displayedColumns[1]);
+    
 
     // this.pedido.paginator = this.paginator;
   }
@@ -87,7 +93,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
 
   getPedidosByUser() {
     this.service.getPedidosByUser().pipe(take(1)).subscribe((resp) => {
-      console.log(resp);
+      
 
       if (resp['type'] == "ok" && resp['data']) {
         this.dataSource = [];
@@ -113,16 +119,14 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       }
     }, error => {
 
-      console.log(error);
-
-
-
+      this.toastr.error(error['statusText'],"Error")
+      
     })
 
   }
   getPedidosByCompany() {
     this.service.getPedidosByCompania().pipe(take(1)).subscribe((resp) => {
-      console.log(resp);
+
 
       if (resp['type'] == "ok" && resp['data']) {
         this.dataSource = [];
@@ -147,13 +151,9 @@ export class PedidosComponent implements OnInit, AfterViewInit {
         // this.dataSource = [...resp['data']];
       }
     }, error => {
-
-      console.log(error);
-
-
-
+      this.toastr.error(error['statusText'],"Error")
+      
     })
-
   }
 
   openDialog(element) {
@@ -161,7 +161,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       data: element['detalle']
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
+      
     })
 
   }

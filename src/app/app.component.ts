@@ -29,13 +29,13 @@ import { CookieService } from "ngx-cookie-service";
 import { LoadingComponent } from "./loading/loading.component";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { ToastrService } from "ngx-toastr";
-import { ShopcarService } from "./productos/shopcar/shopcar.service";
 import { SocketServiceService } from "./socketService/socket-service.service";
 import {MatAccordion, MatExpansionModule} from '@angular/material/expansion'
 import { Subject, debounceTime, fromEvent, take } from "rxjs";
 import { CarPedidoComponent } from "./pedidos/car-pedido/car-pedido.component";
 import { ApiService } from "./api/api.service";
 import Swal from 'sweetalert2';
+import { LocalService } from "./services/local.service";
 
 @Component({
   selector: "app-root",
@@ -88,7 +88,7 @@ export class AppComponent implements OnChanges, OnInit,AfterViewInit {
     private router: Router,
     private cookie: CookieService,
     private toastr: ToastrService,
-    private serLocal: ShopcarService,
+    private serLocal: LocalService,
     private socketService: SocketServiceService,
     private service:ApiService
   ) {
@@ -105,6 +105,8 @@ export class AppComponent implements OnChanges, OnInit,AfterViewInit {
 
   }
   ngOnInit(): void {
+
+    
     if (this.cookie.get("token")) {
       this.headerVisible = true;
       let count: [] = this.serLocal.getItem('pedido');
@@ -132,7 +134,7 @@ export class AppComponent implements OnChanges, OnInit,AfterViewInit {
   confirmar() {
     let  pedido=this.serLocal.getItem('pedido');
     this.service.createPedido(pedido).pipe(take(1)).subscribe((resp)=>{
-      console.log(resp);
+      
       if(resp['type']=="ok"){
         this.toastr.success("Pedido enviado");
         this.socketService.test(0);
@@ -140,13 +142,7 @@ export class AppComponent implements OnChanges, OnInit,AfterViewInit {
         this.serLocal.removeItem('pedido');
       }
     },error=>{
-      console.log(error);
-      
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: "Ha ocurrido un error",
-      })
+      this.toastr.error(error['statusText'],"Error")
       
     });
   }

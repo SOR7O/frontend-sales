@@ -14,6 +14,7 @@ import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angula
 import { ApiService } from '../api/api.service';
 import { take, pipe, takeUntil, Subject } from 'rxjs';
 import { NavigationExtras, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 // import {} from("@angular/material/table")
 @Component({
   selector: 'app-compania',
@@ -54,7 +55,7 @@ export class CompaniaComponent implements OnInit {
   // ];
   // dataSource2 = [];
   dataSource = new MatTableDataSource();
-  constructor(private api: ApiService, private router: Router) {
+  constructor(private api: ApiService, private router: Router,private toastr:ToastrService) {
     // this.getCompania();
   }
   ngOnInit(): void {
@@ -67,8 +68,8 @@ export class CompaniaComponent implements OnInit {
 
 
     this.api.getCompanias().pipe(takeUntil(this.destroy$)).subscribe((response) => {
-      console.log("data");
-      console.log(response);
+      
+      
 
 
       if (response['type'] == "ok" && response['data'].length > 0) {
@@ -79,6 +80,8 @@ export class CompaniaComponent implements OnInit {
         this.dataSource = new MatTableDataSource(dataSource);
       }
 
+    },error=>{
+      this.toastr.error(error['statusText'],"Error")
     })
   }
   filtrar(e) {
@@ -92,14 +95,20 @@ export class CompaniaComponent implements OnInit {
       this.api.createCompania(this.companyForm.value).pipe(take(1)).subscribe((response) => {
 
         this.companyForm.reset();
+        this.toastr.success("Creado exitosamente","Exitosamente")
 
+
+      },error=>{
+        this.toastr.error(error['statusText'],"Error")
       })
     } else {
       this.api.updateCompania(this.companyForm.value).pipe(take(1)).subscribe((up) => {
-        console.log("updated");
-        console.log(up);
-        this.companyForm.reset();
 
+        this.companyForm.reset();
+        this.toastr.success("Creado exitosamente","Exitosamente")
+
+      },error=>{
+        this.toastr.error(error['statusText'],"Error")
       })
     }
     this.getCompania();
@@ -107,7 +116,7 @@ export class CompaniaComponent implements OnInit {
   edit(row) {
 
     row['fecha'] = new Date().toISOString().slice(0, 10)
-    console.log(row);
+    
 
     this.companyForm.patchValue(row)
     this.update = true;
@@ -115,7 +124,7 @@ export class CompaniaComponent implements OnInit {
   }
 
   delete(row) {
-    console.log(row);
+    
 
     this.api.deleteCompania(row).pipe(take(1)).subscribe((res) => {
       this.getCompania();

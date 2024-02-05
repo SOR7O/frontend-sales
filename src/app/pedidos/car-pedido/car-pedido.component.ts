@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { ShopcarService } from '../../productos/shopcar/shopcar.service';
+
 import { CommonModule } from '@angular/common';
 import { SocketServiceService } from '../../socketService/socket-service.service';
 import { MatTableModule } from '@angular/material/table';
@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { ApiService } from '../../api/api.service';
 import  Swal from 'sweetalert2'
+import { LocalService } from '../../services/local.service';
 
 @Component({
   selector: 'app-car-pedido',
@@ -58,15 +59,18 @@ delete(element) {
 }
 
 dataSource=[];
-  constructor(private lsts: ShopcarService, private socket: SocketServiceService, private service:ApiService) {
+  constructor(private lsts: LocalService, private socket: SocketServiceService, private service:ApiService) {
 
   }
   ngAfterViewInit(): void {
-    
-    this.socket.listenPedidos().subscribe((val) => {
+    try {      
+      this.socket?.listenPedidos().subscribe((val) => {
+        
+        this.getPedido();
+      })
+    } catch (error) {
       
-      this.getPedido();
-    })
+    }
   }
   ngOnInit(): void {
     this.getPedido();

@@ -8,12 +8,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
 import { CalculosService } from '../../services/calculos.service';
-import { ShopcarService } from '../../productos/shopcar/shopcar.service';
 import { ApiService } from '../../api/api.service';
 import { take } from 'rxjs';
 
 import Swal from 'sweetalert2';
 import { SocketServiceService } from '../../socketService/socket-service.service';
+import { ToastrService } from 'ngx-toastr';
+import { LocalService } from '../../services/local.service';
 @Component({
   selector: 'app-detalle-pedido',
   standalone: true,
@@ -44,9 +45,10 @@ export class DetallePedidoComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: [],
     public dialog: MatDialog,
     private cal: CalculosService,
-    private lcstr: ShopcarService,
+    private lcstr: LocalService,
     private service: ApiService,
-    private socket: SocketServiceService
+    private socket: SocketServiceService,
+    private toastr: ToastrService,
   ) { }
   ngOnInit(): void {
     this.typeUser = this.lcstr.getItem('typeUser')
@@ -83,7 +85,7 @@ export class DetallePedidoComponent implements OnInit {
       this.socket.emitConfirmacionPedido(element);
 
     }, error => {
-
+      this.toastr.error("error")
 
     })
 
