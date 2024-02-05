@@ -63,7 +63,7 @@ export class FacturaService {
     return this.http.post(apiUrl, data, this.httpOptions);
   }
 
-  updatEstablecimientoe(id: string, data: any): Observable<any> {
+  updatEstablecimiento(id: string, data: any): Observable<any> {
     let apiUrl=this.apiUrl+'updateEstablecimientoById';
     console.log(this.apiUrl);
     
@@ -72,6 +72,32 @@ export class FacturaService {
 
   deleteEstablecimiento(id: string): Observable<any> {
     let apiUrl=this.apiUrl+'deleteEstablecimientoById';
+    return this.http.delete(`${apiUrl}/${id}`, this.httpOptions);
+  }
+
+  //crud Tipos de documento
+  getTiposDocumentosById(id: string): Observable<any> {
+    let apiUrl=this.apiUrl+'getTipoDocumentoByCompania';
+    return this.http.post(`${apiUrl}/${id}`,{id:id}, this.httpOptions);
+  }
+
+  createTipoDocumento(data: any): Observable<any> {
+    let apiUrl=this.apiUrl+'createTipoDocumento';
+    data['idCompania']= this.localStorage.getItem('idCompania');
+    console.log(data);
+    
+    return this.http.post(apiUrl, data, this.httpOptions);
+  }
+
+  updateTipoDocumento(id: string, data: any): Observable<any> {
+    let apiUrl=this.apiUrl+'updateTipoDocumentoById';
+    console.log(this.apiUrl);
+    
+    return this.http.put(`${apiUrl}/${id}`, data, this.httpOptions);
+  }
+
+  deleteTipoDocumento(id: string): Observable<any> {
+    let apiUrl=this.apiUrl+'deleteTipoDocumentoById';
     return this.http.delete(`${apiUrl}/${id}`, this.httpOptions);
   }
 

@@ -9,6 +9,7 @@ import { ProductosComponent } from './productos/productos.component';
 import { PedidosComponent } from './pedidos/pedidos.component';
 import { PuntoEmisionComponent } from './factura/punto-emision/punto-emision.component';
 import { EstablecimientoComponent } from './factura/establecimiento/establecimiento.component';
+import { TiposFacturaComponent } from './factura/tipos-factura/tipos-factura.component';
 
 export const routes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
@@ -20,5 +21,6 @@ export const routes: Routes = [
     { path: 'pedidos', component: PedidosComponent, canActivate: [AuthGuard] },
     { path: 'puntoemision', component: PuntoEmisionComponent, canActivate: [AuthGuard] },
     { path: 'establecimientoFactura', component: EstablecimientoComponent, canActivate: [AuthGuard] },
+    { path: 'tipoFactura', component: TiposFacturaComponent, canActivate: [AuthGuard] },
 
 ];

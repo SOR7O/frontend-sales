@@ -71,7 +71,7 @@ displayedColumns=['acciones','establecimiento','descripcion','correlativo','acti
     if (this.establecimientoForm.valid) {
       if (this.establecimientoForm.value._id) {
         this.apiFac
-          .updatEstablecimientoe(this.establecimientoForm.value._id, this.establecimientoForm.value)
+          .updatEstablecimiento(this.establecimientoForm.value._id, this.establecimientoForm.value)
           .subscribe((response) => {
             
             this.resetForm();

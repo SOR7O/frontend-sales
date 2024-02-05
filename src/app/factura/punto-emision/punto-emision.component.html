@@ -29,12 +29,8 @@
                                 <mat-label>Correlativo</mat-label>
                                 <input matInput formControlName="correlativo" required />
                             </mat-form-field>
-                            <div class="form-field-margin">
-                                <mat-radio-group formControlName="activo" class="check-container">
-                                    <mat-radio-button value="true">Activo</mat-radio-button>
-                                    <mat-radio-button value="false">Inactivo</mat-radio-button>
-                                </mat-radio-group>
-                            </div>
+                            <mat-slide-toggle [checked]="true"  class="form-field-margin"
+                                formControlName="activo">Activo</mat-slide-toggle>
                         </div>
                     </div>
 

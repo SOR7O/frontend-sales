@@ -13,11 +13,12 @@ import { MatRadioModule } from '@angular/material/radio';
 import { LocalService } from '../../services/local.service';
 import { Subject } from 'rxjs';
 import Swal from 'sweetalert2';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-punto-emision',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatRadioModule, MatTableModule, MatButtonModule, MatInputModule, MatIconModule, MatFormFieldModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, MatSlideToggleModule,MatCardModule, MatRadioModule, MatTableModule, MatButtonModule, MatInputModule, MatIconModule, MatFormFieldModule, ReactiveFormsModule, FormsModule],
   templateUrl: './punto-emision.component.html',
   styleUrl: './punto-emision.component.css'
 })
