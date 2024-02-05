@@ -7,6 +7,7 @@ import { LoadingComponent } from './loading/loading.component';
 import { ClientesComponent } from './clientes/clientes.component';
 import { ProductosComponent } from './productos/productos.component';
 import { PedidosComponent } from './pedidos/pedidos.component';
+import { PuntoEmisionComponent } from './factura/punto-emision/punto-emision.component';
 
 export const routes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
@@ -15,6 +16,7 @@ export const routes: Routes = [
     { path: 'clientes', component: ClientesComponent,canActivate: [AuthGuard] },
     { path: 'login', component: LoginComponent },
     { path: 'productos', component: ProductosComponent, canActivate: [AuthGuard] },
-    { path: 'pedidos', component: PedidosComponent, canActivate: [AuthGuard] }
+    { path: 'pedidos', component: PedidosComponent, canActivate: [AuthGuard] },
+    { path: 'puntoemision', component: PuntoEmisionComponent, canActivate: [AuthGuard] },
 
 ];

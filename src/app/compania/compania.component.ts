@@ -50,10 +50,7 @@ export class CompaniaComponent implements OnInit {
     "correo",
     "is_activated"
   ];
-  // displayedColumns: string[] = [
-  //   "nombre",
-  // ];
-  // dataSource2 = [];
+
   dataSource = new MatTableDataSource();
   constructor(private api: ApiService, private router: Router,private toastr:ToastrService) {
     // this.getCompania();
