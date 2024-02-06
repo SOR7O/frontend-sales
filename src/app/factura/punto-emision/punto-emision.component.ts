@@ -85,6 +85,8 @@ export class PuntoEmisionComponent implements AfterViewInit, OnDestroy {
 
     }
     else {
+      console.log(this.puntoEmisionForm.errors);
+      
       this.toastr.warning("Rellena todos los campos", 'Warning')
     }
   }

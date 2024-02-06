@@ -18,7 +18,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 @Component({
   selector: 'app-tipos-factura',
   standalone: true,
-  imports: [CommonModule,MatSlideToggleModule, MatCardModule, MatRadioModule, MatTableModule, MatButtonModule, MatInputModule, MatIconModule, MatFormFieldModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, MatSlideToggleModule, MatCardModule, MatRadioModule, MatTableModule, MatButtonModule, MatInputModule, MatIconModule, MatFormFieldModule, ReactiveFormsModule, FormsModule],
   templateUrl: './tipos-factura.component.html',
   styleUrl: './tipos-factura.component.css'
 })
@@ -27,15 +27,15 @@ export class TiposFacturaComponent {
   dataSource = [];
   private destroy$: Subject<void> = new Subject<void>();
 
-  displayedColumns = ['actions','tipoFactura', 'descripcion', 'correlativo', 'activo'];
+  displayedColumns = ['actions', 'tipoFactura', 'descripcion', 'correlativo', 'activo'];
 
   constructor(private formBuilder: FormBuilder, private apiService: FacturaService,
-    private toastr:ToastrService,private localStorage:LocalService) { 
+    private toastr: ToastrService, private localStorage: LocalService) {
     this.tiposFacturaForm = this.formBuilder.group({
-      _id:[''],
+      _id: [''],
       tipoFactura: ['', Validators.required],
       descripcion: ['', Validators.required],
-      correlativo: ['', Validators.required],
+      correlativo: ['', Validators.required, Validators.minLength(2), Validators.maxLength(2)],
       idCompania: [''],
       activo: [true, Validators.required]
     });
@@ -45,12 +45,12 @@ export class TiposFacturaComponent {
     this.getTiposFactura();
   }
   getTiposFactura() {
-    
-    
+
+
     let id = this.localStorage.getItem("idCompania")
     this.apiService.getTiposDocumentosById(id).subscribe((resp) => {
       let _data = resp['data']
-      
+
       this.dataSource = [..._data]
 
     });
@@ -64,7 +64,7 @@ export class TiposFacturaComponent {
           .updateTipoDocumento(this.tiposFacturaForm.value._id, this.tiposFacturaForm.value)
           .subscribe((response) => {
             console.log(response);
-            
+
             this.resetForm();
             this.toastr.success("Actualizado correctamente", 'Exitosamente')
             this.getTiposFactura();
@@ -74,14 +74,14 @@ export class TiposFacturaComponent {
           .createTipoDocumento(this.tiposFacturaForm.value)
           .subscribe((response) => {
             console.log(response);
-            if(response){
+            if (response) {
 
 
               this.resetForm();
               this.toastr.success("Creado correctamente", 'Exitosamente')
-              
-              
-              
+
+
+
               this.getTiposFactura();
             }
           });
@@ -109,8 +109,8 @@ export class TiposFacturaComponent {
     }).then((result) => {
       if (result.isConfirmed) {
         this.apiService.deleteTipoDocumento(id).subscribe((response) => {
-          
-          if(response['type']=="ok"){
+
+          if (response['type'] == "ok") {
             this.toastr.success("Eliminado correctamente", 'Exitosamente')
             this.getTiposFactura();
 

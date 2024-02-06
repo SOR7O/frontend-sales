@@ -100,5 +100,30 @@ export class FacturaService {
     let apiUrl=this.apiUrl+'deleteTipoDocumentoById';
     return this.http.delete(`${apiUrl}/${id}`, this.httpOptions);
   }
+  //crud Tipos de documento
+  getCaiById(id: string): Observable<any> {
+    let apiUrl=this.apiUrl+'getCaiByCompania';
+    return this.http.post(`${apiUrl}/${id}`,{id:id}, this.httpOptions);
+  }
+
+  createCai(data: any): Observable<any> {
+    let apiUrl=this.apiUrl+'createCai';
+    data['idCompania']= this.localStorage.getItem('idCompania');
+    console.log(data);
+    
+    return this.http.post(apiUrl, data, this.httpOptions);
+  }
+
+  updateCai(id: string, data: any): Observable<any> {
+    let apiUrl=this.apiUrl+'updateCaiById';
+    console.log(this.apiUrl);
+    
+    return this.http.put(`${apiUrl}/${id}`, data, this.httpOptions);
+  }
+
+  deleteCai(id: string): Observable<any> {
+    let apiUrl=this.apiUrl+'deleteCaiById';
+    return this.http.delete(`${apiUrl}/${id}`, this.httpOptions);
+  }
 
 }

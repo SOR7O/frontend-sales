@@ -41,7 +41,7 @@ displayedColumns=['acciones','establecimiento','descripcion','correlativo','acti
       _id:[''],
       establecimiento: ['', Validators.required],
       descripcion: ['', Validators.required],
-      correlativo: ['', Validators.required],
+      correlativo: ['', Validators.required,Validators.minLength(3), Validators.maxLength(3)],
       idCompania: [''],
       activo: [false, Validators.required]
     });
@@ -52,9 +52,9 @@ displayedColumns=['acciones','establecimiento','descripcion','correlativo','acti
   }
 
   ngAfterViewInit(): void {
-    this.getPuntosEmision();
+    this.getEstablecimiento();
   }
-  getPuntosEmision() {
+  getEstablecimiento() {
     
     
     let id = this.localStorage.getItem("idCompania")
@@ -76,7 +76,7 @@ displayedColumns=['acciones','establecimiento','descripcion','correlativo','acti
             
             this.resetForm();
             this.toastr.success("Actualizado correctamente", 'Exitosamente')
-            this.getPuntosEmision();
+            this.getEstablecimiento();
           });
       } else {
         this.apiFac
@@ -90,7 +90,7 @@ displayedColumns=['acciones','establecimiento','descripcion','correlativo','acti
               
               
               
-              this.getPuntosEmision();
+              this.getEstablecimiento();
             }
           });
       }
@@ -120,7 +120,7 @@ displayedColumns=['acciones','establecimiento','descripcion','correlativo','acti
           
           if(response['type']=="ok"){
             this.toastr.success("Eliminado correctamente", 'Exitosamente')
-            this.getPuntosEmision();
+            this.getEstablecimiento();
 
           }
 
