@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild, inject } from "@angular/core";
+import { Component, Input, OnDestroy, OnInit, ViewChild, inject } from "@angular/core";
 import {
   AbstractControl,
   FormBuilder,
@@ -13,12 +13,12 @@ import { MatError, MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatCardModule } from "@angular/material/card";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { MatRadioModule } from "@angular/material/radio";
+import { MAT_RADIO_DEFAULT_OPTIONS, MatRadioModule } from "@angular/material/radio";
 import { MatIconModule } from "@angular/material/icon";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatTableModule } from "@angular/material/table";
 import { MatGridListModule } from "@angular/material/grid-list";
-import { take } from "rxjs";
+import { Subject, take } from "rxjs";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { CookieService } from "ngx-cookie-service";
 // import { ToastrModule, ToastrService } from 'ngx-toastr';
@@ -40,6 +40,7 @@ import {
   provideClientHydration,
 } from "@angular/platform-browser";
 import { SocketServiceService } from "../socketService/socket-service.service";
+import { FacturaService } from "../api/factura.service";
 
 
 
@@ -64,15 +65,18 @@ import { SocketServiceService } from "../socketService/socket-service.service";
     MatGridListModule,
     ReactiveFormsModule,
     ProductsClientComponent,
+    MatRadioModule,
   ],
   templateUrl: "./productos.component.html",
   styleUrl: "./productos.component.css",
 })
-export class ProductosComponent implements OnInit {
+export class ProductosComponent implements OnInit, OnDestroy {
   @ViewChild(ToastContainerDirective, { static: true })
+  private destroy$: Subject<void> = new Subject<void>();
 
   toastContainer: ToastContainerDirective;
   base64Image = "";
+  imps = [];
 
   productoForm: FormGroup;
   displayedColumns: string[] = [
@@ -83,10 +87,10 @@ export class ProductosComponent implements OnInit {
     "idUser",
     "imagen",
     "precio",
+    "imp"
   ];
   dataSource = [];
   sendProducto = false;
-  ß;
   toUpdate = false;
   constructor(
     private fb: FormBuilder,
@@ -95,7 +99,8 @@ export class ProductosComponent implements OnInit {
     private cookie: CookieService,
     public toastr: ToastrService,
     private _sanitazer: DomSanitizer,
-    private socket:SocketServiceService
+    private socket: SocketServiceService,
+    private apiImp: FacturaService
   ) {
 
     this.productoForm = this.fb.group({
@@ -107,13 +112,24 @@ export class ProductosComponent implements OnInit {
       idUser: [""],
       imagen: [""],
       precio: ["", Validators.required],
+      imp: ['']
     });
   }
-  setValue(){
 
+  getImpuestos() {
+    this.apiImp.getImpuestos().pipe(take(1)).subscribe((res) => {
+      if (res['type'] == "ok" && res['data'].length > 0) {
+        this.imps=[...[]];
+        this.imps= [...res['data']];
+      }
+    }, error => {
+      this.toastr.error("Ha ocurrido un error al obtener los datos", "Error")
+    })
   }
   saveProducto() {
     let data = this.productoForm.value;
+    console.log(data);
+    
     this.sendProducto = true;
     data["imagen"] = this.base64Image;
 
@@ -143,7 +159,7 @@ export class ProductosComponent implements OnInit {
     let data = this.productoForm.value;
     this.sendProducto = true;
     data["imagen"] = this.base64Image;
-    
+
     this.api
       .updateProducto(data)
       .pipe(take(1))
@@ -168,6 +184,7 @@ export class ProductosComponent implements OnInit {
 
   ngOnInit(): void {
     this.getProductos();
+    this.getImpuestos();
     this.toastr.overlayContainer = this.toastContainer;
   }
   delete() {
@@ -184,7 +201,7 @@ export class ProductosComponent implements OnInit {
             this.getProductos();
           }
         },
-        (error) => {},
+        (error) => { },
       );
   }
   edit(elemento) {
@@ -218,14 +235,14 @@ export class ProductosComponent implements OnInit {
     return this.productoForm.get("precio");
   }
   getProductos() {
-    
+
 
     this.api
       .getProductoByCompania({ data: "data" })
       .pipe(take(1))
       .subscribe(
         (resp: any) => {
-          
+
 
           if (!resp) return;
 
@@ -237,7 +254,7 @@ export class ProductosComponent implements OnInit {
           });
         },
         (error) => {
-          
+
 
           if (error["statusText"] == "Unauthorized") {
             this.cookie.deleteAll();
@@ -248,7 +265,7 @@ export class ProductosComponent implements OnInit {
       );
   }
 
-  
+
   openModel(elemento) {
     const modelDiv = document.getElementById("myModal");
     if (modelDiv != null) {
@@ -273,5 +290,9 @@ export class ProductosComponent implements OnInit {
     this.toUpdate = false;
     this.sendProducto = false;
     this.base64Image = "";
+  }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

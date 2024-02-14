@@ -1,4 +1,4 @@
-<app-products-client ></app-products-client>
+<app-products-client></app-products-client>
 
 <mat-card class="container">
     <form [formGroup]="productoForm">
@@ -20,22 +20,14 @@
                     </mat-form-field>
                 </mat-grid-tile>
                 <mat-grid-tile>
-                    <input
-                        id="uploadCaptureInputFile"
-                        class="form-control"
-                        (change)="onFileChange($event)"
-                        type="file"
-                    />
+                    <input id="uploadCaptureInputFile" class="form-control" (change)="onFileChange($event)"
+                        type="file" />
                 </mat-grid-tile>
                 <mat-grid-tile>
                     <div *ngIf="base64Image" class="card" style="width: 10rem">
                         <img [src]="base64Image" />
                     </div>
-                    <button
-                        *ngIf="base64Image!=''"
-                        mat-raised-button
-                        (click)="resetImage()"
-                    >
+                    <button *ngIf="base64Image!=''" mat-raised-button (click)="resetImage()">
                         Reset
                     </button>
                 </mat-grid-tile>
@@ -43,56 +35,38 @@
                 <mat-grid-tile>
                     <mat-form-field class="matformfield">
                         <mat-label>Precio</mat-label>
-                        <input
-                            matInput
-                            id="precio"
-                            formControlName="precio"
-                            type="number"
-                            step="0.01"
-                        />
-                        <mat-error
-                            >El precio debe ser un número decimal con máximo 2
-                            decimales</mat-error
-                        >
+                        <input matInput id="precio" formControlName="precio" type="number" step="0.01" />
+                        <mat-error>El precio debe ser un número decimal con máximo 2
+                            decimales</mat-error>
                     </mat-form-field>
                 </mat-grid-tile>
+                <mat-grid-tile>
+                    <mat-radio-group aria-label="Selecciona un elemento" formControlName="imp">
+                        <mat-radio-button *ngFor="let imp of imps"
+                            [value]="imp['valor']">{{imp['correlativo']}}</mat-radio-button>
+                    </mat-radio-group>
 
+                </mat-grid-tile>
                 <mat-grid-tile>
                     <mat-label style="margin-right: 15px">Disponible</mat-label>
                     <mat-radio-group formControlName="disponible">
                         <mat-label>Si</mat-label>
-                        <mat-radio-button
-                            checked
-                            value="true"
-                        ></mat-radio-button>
+                        <mat-radio-button checked value="true"></mat-radio-button>
                         <mat-label>No</mat-label>
                         <mat-radio-button value="false"></mat-radio-button>
                     </mat-radio-group>
                 </mat-grid-tile>
                 <mat-grid-tile>
                     <mat-card-actions align="start" class="cardactions">
-                        <button
-                            class="btn btn-danger"
-                            [disabled]="productoForm.invalid"
-                            (click)="cancelarUpdate()"
-                        >
+                        <button class="btn btn-danger" [disabled]="productoForm.invalid" (click)="cancelarUpdate()">
                             Cancelar
                         </button>
-                        <button
-                            *ngIf="!toUpdate"
-                            class="btn btn-success mr-2"
-                            [disabled]="productoForm.invalid"
-                            (click)="saveProducto()"
-                        >
+                        <button *ngIf="!toUpdate" class="btn btn-success mr-2" [disabled]="productoForm.invalid"
+                            (click)="saveProducto()">
                             Guardar
                         </button>
-                        <button
-                            *ngIf="toUpdate"
-                            (click)="updateProducto()"
-                            class="btn btn-info mr-2"
-                            [disabled]="productoForm.invalid"
-                            type="submit"
-                        >
+                        <button *ngIf="toUpdate" (click)="updateProducto()" class="btn btn-info mr-2"
+                            [disabled]="productoForm.invalid" type="submit">
                             Actualizar
                         </button>
                     </mat-card-actions>
@@ -111,21 +85,11 @@
         <ng-container matColumnDef="acciones">
             <th mat-header-cell *matHeaderCellDef>Acciones</th>
             <td mat-cell *matCellDef="let element">
-                <button
-                    (click)="edit(element)"
-                    mat-mini-fab
-                    color="primary"
-                    matTooltip="Actualizar producto"
-                >
+                <button (click)="edit(element)" mat-mini-fab color="primary" matTooltip="Actualizar producto">
                     <mat-icon>update</mat-icon>
                 </button>
-                <button
-                    (click)="openModel(element)"
-                    mat-mini-fab
-                    color="warn"
-                    aria-label="Example icon button with a heart icon"
-                    matTooltip="Eliminar producto"
-                >
+                <button (click)="openModel(element)" mat-mini-fab color="warn"
+                    aria-label="Example icon button with a heart icon" matTooltip="Eliminar producto">
                     <mat-icon>delete</mat-icon>
                 </button>
             </td>
@@ -172,6 +136,13 @@
                 {{ element.precio['$numberDecimal'] }}
             </td>
         </ng-container>
+        <ng-container matColumnDef="imp">
+            <th mat-header-cell *matHeaderCellDef>Impuesto</th>
+            <td mat-cell *matCellDef="let element">
+                {{element.imp?.$numberDecimal }}
+                <!-- {{ element?.imp['$numberDecimal'] || element['imp']}} -->
+            </td>
+        </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
@@ -187,12 +158,7 @@
             <!-- Modal Header -->
             <div class="modal-header">
                 <h4 class="modal-title">Eliminar producto</h4>
-                <button
-                    type="button"
-                    (click)="CloseModel()"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                ></button>
+                <button type="button" (click)="CloseModel()" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
             <!-- Modal body -->
@@ -202,20 +168,10 @@
 
             <!-- Modal footer -->
             <div class="modal-footer">
-                <button
-                    type="button"
-                    (click)="delete()"
-                    class="btn btn-success"
-                    data-bs-dismiss="modal"
-                >
+                <button type="button" (click)="delete()" class="btn btn-success" data-bs-dismiss="modal">
                     Confirmar
                 </button>
-                <button
-                    type="button"
-                    (click)="CloseModel()"
-                    class="btn btn-danger"
-                    data-bs-dismiss="modal"
-                >
+                <button type="button" (click)="CloseModel()" class="btn btn-danger" data-bs-dismiss="modal">
                     Close
                 </button>
             </div>

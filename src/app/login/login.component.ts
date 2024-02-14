@@ -9,7 +9,8 @@ import { MatButtonModule } from "@angular/material/button"
 import { BehaviorSubject, Observable, take } from 'rxjs';
 import { NavigationExtras, Router } from '@angular/router';
 import { CookieService } from "ngx-cookie-service";
-import { ShopcarService } from '../productos/shopcar/shopcar.service';
+import { ToastrService } from 'ngx-toastr';
+import { LocalService } from '../services/local.service';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -25,42 +26,54 @@ export class LoginComponent implements OnInit {
     password: new FormControl('', [Validators.required, Validators.minLength(1)]),
   });
   login = false;
-  constructor(private api: ApiService, private router: Router, private cookie: CookieService,private lst:ShopcarService) {
-    
-    if (this.cookie.get("token").length==0) {
+  constructor(
+    private toastr: ToastrService,
+    private api: ApiService, private router: Router, private cookie: CookieService, private lst: LocalService) {
+
+    if (this.cookie.get("token").length == 0) {
       this.login = true;
     }
 
   }
 
   onSubmit() {
-    console.log(this.cookie.getAll());
+
 
 
     if (this.loginForm.valid) {
-      const isAuthenticated = true;
       try {
 
         const { email, password } = this.loginForm.value;
         this.api.login(email, password).pipe(take(1)).subscribe((response) => {
-          console.log(response);
+
 
           if (response['message'] == 'Logged in') {
-            this.cookie.set("token", response["token"]);
-            this.lst.setItem('typeUser',response['typeUser'])
-            this.lst.setItem('idUser',response['idUser'])
-            this.lst.setItem('idCompania',response['idCompania'])
+            const myDate: Date = new Date();
+            this.cookie.set("token", response["token"],myDate.getHours() + 1 );
+            this.lst.setItem('typeUser', response['typeUser'])
+            this.lst.setItem('idUser', response['idUser'])
+            this.lst.setItem('idCompania', response['idCompania'])
+            this.toastr.success("Iniciado sesion", "Exitosamente")
             setTimeout(() => {
               window.location.reload();
             }, 3000);
-
+            return;
           }
 
+          this.toastr.warning(response['message'],"Warning")
 
+
+        },error=>{
+          console.log("error here?");
+          console.log(error);
+          
+          this.toastr.error(error['statusText'],"Error")
+          
         });
       } catch (e) {
-        console.log(e);
-
+        
+        
+        this.toastr.error("Ha ocurrido u","Exitosamente")
 
       }
 

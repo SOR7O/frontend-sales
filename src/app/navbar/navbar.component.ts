@@ -30,12 +30,12 @@ export class NavbarComponent {
 
   constructor(){}
   ngOnChanges(changes: SimpleChanges): void {
-    console.log("initChanges");
+    
       
   }
 
   ngOnInit(): void {
-      console.log("iqnit");
+      
       
   }
   badgevisibility() {
@@ -46,7 +46,7 @@ export class NavbarComponent {
 
   }
   filtro(e){
-    console.log(e);
+    
     
   }
   foo = 'Hello';

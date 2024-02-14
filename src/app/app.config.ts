@@ -28,42 +28,12 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatBadgeModule } from "@angular/material/badge";
 import { CommonModule } from "@angular/common";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
-
+import {NativeDateAdapter} from '@angular/material/core';
 export const appConfig: ApplicationConfig = {
 
   // required animations providers
   providers: [
-    importProvidersFrom(BrowserModule,
-      MatMenuModule,
-      MatButtonModule,
-      MatIconModule,
-      MatCardModule,
-      MatSidenavModule,
-      MatListModule,
-      MatToolbarModule,
-      MatMenuModule,
-      RouterLink,
-      RouterLinkActive,
-      MatIconModule,
-      MatToolbarModule,
-      RouterOutlet,
-      CommonModule,
-      MatSnackBarModule,
-      MatInputModule,
-      MatTableModule,
-      MatPaginatorModule,
-      MatSortModule,
-      MatDialogModule,
-      MatFormFieldModule,
-      MatBadgeModule,
-      MatListModule,
-      MatSidenavModule,
-      MatSelectModule,
-      MatDatepickerModule,
-      MatProgressSpinnerModule,
-      MatTabsModule,
-      MatDrawerContent,
-      ReactiveFormsModule),
+  
       
     // provideClientHydration(),
 

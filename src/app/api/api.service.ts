@@ -1,10 +1,11 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
-import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams,HttpResponse } from "@angular/common/http";
 import { CookieService } from "ngx-cookie-service";
 import { Component, Inject } from "@angular/core";
 import { CommonModule, DOCUMENT } from "@angular/common";
-import { ShopcarService } from "../productos/shopcar/shopcar.service";
+import { LocalService } from "../services/local.service";
+
 @Injectable({
   providedIn: "root",
 })
@@ -30,6 +31,8 @@ export class ApiService {
   //   idUser: localStorage?.getItem("idUser"),
   //   idCompania: localStorage?.getItem("idCompania"),
   // };
+
+  date= new Date();
   private headers = new HttpHeaders()
     .set("content-type", "application/json")
     .set("Access-Control-Allow-Origin", "*")
@@ -37,8 +40,17 @@ export class ApiService {
   constructor(
     private http: HttpClient,
     private cookie: CookieService,
-    private lsto: ShopcarService
-  ) { }
+    private lsto: LocalService,
+  ) { 
+    if(!this.cookie.check("token")){
+      this.cookie.deleteAll();
+      this.lsto.removeItem("typeUser")
+      this.lsto.removeItem("idUser")
+      this.lsto.removeItem("idCompania")
+    }
+
+  }
+
 
   public getIsAuth(): Observable<boolean> {
     return this.isLoggedIn$;
@@ -200,4 +212,5 @@ export class ApiService {
       headers: this.headers,
     });
   }
+  
 }

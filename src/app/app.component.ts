@@ -7,6 +7,9 @@ import {
   NgZone,
   ɵglobal,
   AfterViewInit,
+  importProvidersFrom,
+  inject,
+  ApplicationRef,
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import {
@@ -21,7 +24,7 @@ import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { MatMenuModule, MatMenuTrigger } from "@angular/material/menu";
-import { MatSidenavModule } from "@angular/material/sidenav";
+import { MatDrawerContent, MatSidenav, MatSidenavModule } from "@angular/material/sidenav";
 import { MatListModule } from "@angular/material/list";
 import { MatBadgeModule } from "@angular/material/badge";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -29,13 +32,13 @@ import { CookieService } from "ngx-cookie-service";
 import { LoadingComponent } from "./loading/loading.component";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { ToastrService } from "ngx-toastr";
-import { ShopcarService } from "./productos/shopcar/shopcar.service";
 import { SocketServiceService } from "./socketService/socket-service.service";
-import {MatAccordion, MatExpansionModule} from '@angular/material/expansion'
+import { MatAccordion, MatExpansionModule } from '@angular/material/expansion'
 import { Subject, debounceTime, fromEvent, take } from "rxjs";
 import { CarPedidoComponent } from "./pedidos/car-pedido/car-pedido.component";
 import { ApiService } from "./api/api.service";
 import Swal from 'sweetalert2';
+import { LocalService } from "./services/local.service";
 
 @Component({
   selector: "app-root",
@@ -44,6 +47,7 @@ import Swal from 'sweetalert2';
   templateUrl: "./app.component.html",
   styleUrl: "./app.component.css",
   imports: [
+
     CommonModule,
     RouterOutlet,
     MatToolbarModule,
@@ -62,14 +66,18 @@ import Swal from 'sweetalert2';
     MatFormFieldModule,
     NavbarComponent,
     MatExpansionModule,
-    CarPedidoComponent
-
+    CarPedidoComponent,
+    MatDrawerContent
   ],
 })
-export class AppComponent implements OnChanges, OnInit,AfterViewInit {
+export class AppComponent implements OnChanges, OnInit, AfterViewInit {
   toUpdate: boolean;
 
-
+  @ViewChild('sidenav') sidenav: MatSidenav;
+  isExpanded = true;
+  showSubmenu: boolean = false;
+  isShowing = false;
+  showSubSubMenu: boolean = false;
   @ViewChild(MatAccordion) accordion: MatAccordion;
   title = "Ventas";
 
@@ -77,7 +85,7 @@ export class AppComponent implements OnChanges, OnInit,AfterViewInit {
   headerVisible = false;
   badgeCounter = 0;
 
-
+  private ngZone = inject(NgZone);
 
 
   ngAfterViewInit() {
@@ -88,36 +96,66 @@ export class AppComponent implements OnChanges, OnInit,AfterViewInit {
     private router: Router,
     private cookie: CookieService,
     private toastr: ToastrService,
-    private serLocal: ShopcarService,
+    private serLocal: LocalService,
     private socketService: SocketServiceService,
-    private service:ApiService
+    private service: ApiService
   ) {
 
     const ngZone = ɵglobal.Zone;
     if (this.cookie.get("token")) {
       this.headerVisible = true;
     }
+    const TaskTrackingZone = ngZone.current._parent?._properties?.TaskTrackingZone;
+
+    if (!TaskTrackingZone) {
+      return;
+    }
+
+    inject(ApplicationRef).isStable.subscribe(stable => {
+      this.printNgZone(TaskTrackingZone, 0);
+      console.log('Is stable:', stable);
+    });
+
+    this.printNgZone(TaskTrackingZone, 2000);
+
+  }
+  private printNgZone(zone: any, delay: number): void {
+    this.ngZone.runOutsideAngular(() => {
+      setTimeout(() => {
+        // Print to the console all pending tasks
+        // (micro tasks, macro tasks and event listeners):
+        console.debug('👀 Pending tasks in NgZone: 👀');
+        console.debug({
+          microTasks: zone.getTasksFor('microTask'),
+          macroTasks: zone.getTasksFor('macroTask'),
+          eventTasks: zone.getTasksFor('eventTask')
+        });
+
+      }, delay);
+    });
   }
   ngOnChanges(changes: SimpleChanges): void {
-    
+
     let count: [] = this.serLocal.getItem('pedido');
     this.badgeCounter = count != undefined ? count.length : 0;
 
   }
   ngOnInit(): void {
+
+
     if (this.cookie.get("token")) {
       this.headerVisible = true;
       let count: [] = this.serLocal.getItem('pedido');
       this.badgeCounter = count != undefined ? count.length : 0;
       this.socketService.connect();
-      this.socketService.listenPedidos().subscribe((val)=>{
-        this.badgeCounter=val;
-        
+      this.socketService.listenPedidos().subscribe((val) => {
+        this.badgeCounter = val;
+
       })
     }
   }
   badgevisibility() {
-    
+
 
     this.badgevisible = true;
     // this.socketService.test()
@@ -130,24 +168,18 @@ export class AppComponent implements OnChanges, OnInit,AfterViewInit {
     }
   }
   confirmar() {
-    let  pedido=this.serLocal.getItem('pedido');
-    this.service.createPedido(pedido).pipe(take(1)).subscribe((resp)=>{
-      console.log(resp);
-      if(resp['type']=="ok"){
+    let pedido = this.serLocal.getItem('pedido');
+    this.service.createPedido(pedido).pipe(take(1)).subscribe((resp) => {
+
+      if (resp['type'] == "ok") {
         this.toastr.success("Pedido enviado");
         this.socketService.test(0);
         this.CloseModel();
         this.serLocal.removeItem('pedido');
       }
-    },error=>{
-      console.log(error);
-      
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: "Ha ocurrido un error",
-      })
-      
+    }, error => {
+      this.toastr.error(error['statusText'], "Error")
+
     });
   }
   openModel() {
@@ -159,5 +191,16 @@ export class AppComponent implements OnChanges, OnInit,AfterViewInit {
   cancelarUpdate() {
     this.toUpdate = false;
 
+  }
+  mouseenter() {
+    if (!this.isExpanded) {
+      this.isShowing = true;
+    }
+  }
+
+  mouseleave() {
+    if (!this.isExpanded) {
+      this.isShowing = false;
+    }
   }
 }

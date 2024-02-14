@@ -6,9 +6,9 @@ import { MatCardModule } from "@angular/material/card";
 import { CommonModule } from "@angular/common";
 import { MatIconModule } from "@angular/material/icon";
 import { DomSanitizer } from "@angular/platform-browser";
-import { ShopcarService } from "../shopcar/shopcar.service";
 import { SocketServiceService } from "../../socketService/socket-service.service";
 import { Popover } from "bootstrap";
+import { LocalService } from "../../services/local.service";
 
 interface Products {
   idProducto: string;
@@ -43,7 +43,7 @@ export class ProductsClientComponent implements OnInit {
   constructor(
     private api: ApiService,
     private _sanitazer: DomSanitizer,
-    private tempStorage: ShopcarService,
+    private tempStorage: LocalService,
     private socket: SocketServiceService,
 
   ) {
@@ -55,13 +55,17 @@ export class ProductsClientComponent implements OnInit {
   }
 
   saveTemporaryShop(data): void {
-
+    console.log(data);
+    
 
     let precio = data['precio']['$numberDecimal'];
+    let _imp = data['imp']===undefined?0.0:data['imp']['$numberDecimal'];
     let subtotal = Number(precio * 1);
-    let imp = Number(subtotal * 0.15);
+    let imp = Number(subtotal * _imp);
     let total = Number(imp + subtotal);
     let id = this.tempStorage.getItem('idUser')
+    console.log(imp);
+    
 
     const prods: Products = {
       idProducto: data['_id'],
@@ -131,7 +135,7 @@ export class ProductsClientComponent implements OnInit {
       );
   }
   setValue($event) {
-    console.log($event);
+
 
   }
 }
