@@ -10,6 +10,8 @@ import {
   importProvidersFrom,
   inject,
   ApplicationRef,
+  Output,
+  EventEmitter,
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import {
@@ -19,7 +21,6 @@ import {
   RouterOutlet,
 } from "@angular/router";
 
-import { NavbarComponent } from "./navbar/navbar.component";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
@@ -60,17 +61,16 @@ import { LocalService } from "./services/local.service";
     MatSnackBarModule,
     MatMenuModule,
     MatSidenavModule,
-    NavbarComponent,
     MatListModule,
     MatBadgeModule,
     MatFormFieldModule,
-    NavbarComponent,
     MatExpansionModule,
     CarPedidoComponent,
     MatDrawerContent
   ],
 })
-export class AppComponent implements OnChanges, OnInit, AfterViewInit {
+export class AppComponent implements  OnInit {
+  @Output () noShowLoading= new EventEmitter<boolean>()
   toUpdate: boolean;
 
   @ViewChild('sidenav') sidenav: MatSidenav;
@@ -84,6 +84,7 @@ export class AppComponent implements OnChanges, OnInit, AfterViewInit {
   badgevisible = false;
   headerVisible = false;
   badgeCounter = 0;
+  isLoading=true;
 
   private ngZone = inject(NgZone);
 
@@ -104,41 +105,20 @@ export class AppComponent implements OnChanges, OnInit, AfterViewInit {
     const ngZone = ɵglobal.Zone;
     if (this.cookie.get("token")) {
       this.headerVisible = true;
-    }
-    const TaskTrackingZone = ngZone.current._parent?._properties?.TaskTrackingZone;
-
-    if (!TaskTrackingZone) {
-      return;
-    }
-
-    inject(ApplicationRef).isStable.subscribe(stable => {
-      this.printNgZone(TaskTrackingZone, 0);
-      console.log('Is stable:', stable);
-    });
-
-    this.printNgZone(TaskTrackingZone, 2000);
-
-  }
-  private printNgZone(zone: any, delay: number): void {
-    this.ngZone.runOutsideAngular(() => {
       setTimeout(() => {
-        // Print to the console all pending tasks
-        // (micro tasks, macro tasks and event listeners):
-        console.debug('👀 Pending tasks in NgZone: 👀');
-        console.debug({
-          microTasks: zone.getTasksFor('microTask'),
-          macroTasks: zone.getTasksFor('macroTask'),
-          eventTasks: zone.getTasksFor('eventTask')
-        });
-
-      }, delay);
-    });
+       this. isLoading=false
+      }, 1000);
+    }
   }
+
   ngOnChanges(changes: SimpleChanges): void {
 
     let count: [] = this.serLocal.getItem('pedido');
     this.badgeCounter = count != undefined ? count.length : 0;
 
+  }
+  disabledLoading(){
+    this.noShowLoading.emit(false);
   }
   ngOnInit(): void {
 

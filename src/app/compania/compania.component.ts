@@ -15,11 +15,15 @@ import { ApiService } from '../api/api.service';
 import { take, pipe, takeUntil, Subject } from 'rxjs';
 import { NavigationExtras, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { CommonModule } from '@angular/common';
 // import {} from("@angular/material/table")
 @Component({
   selector: 'app-compania',
   standalone: true,
-  imports: [MatTableModule, MatIconModule, MatButtonModule, MatInputModule, MatCardModule, MatProgressBarModule, MatRadioModule, MatDividerModule, MatGridListModule, ReactiveFormsModule],
+  imports: [MatTableModule, MatIconModule,
+    MatProgressSpinnerModule,CommonModule
+    ,MatButtonModule, MatInputModule, MatCardModule, MatProgressBarModule, MatRadioModule, MatDividerModule, MatGridListModule, ReactiveFormsModule],
   templateUrl: './compania.component.html',
   styleUrl: './compania.component.css'
 })
@@ -52,6 +56,7 @@ export class CompaniaComponent implements OnInit {
   ];
 
   dataSource = new MatTableDataSource();
+dataCargada: boolean=false;
   constructor(private api: ApiService, private router: Router,private toastr:ToastrService) {
     // this.getCompania();
   }
@@ -76,6 +81,7 @@ export class CompaniaComponent implements OnInit {
         const dataSource = [...[]]
         this.dataSource = new MatTableDataSource(dataSource);
       }
+      this.dataCargada=true;
 
     },error=>{
       this.toastr.error(error['statusText'],"Error")

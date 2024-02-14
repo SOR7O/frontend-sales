@@ -41,6 +41,7 @@ import {
 } from "@angular/platform-browser";
 import { SocketServiceService } from "../socketService/socket-service.service";
 import { FacturaService } from "../api/factura.service";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 
 
@@ -66,6 +67,7 @@ import { FacturaService } from "../api/factura.service";
     ReactiveFormsModule,
     ProductsClientComponent,
     MatRadioModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: "./productos.component.html",
   styleUrl: "./productos.component.css",
@@ -92,6 +94,7 @@ export class ProductosComponent implements OnInit, OnDestroy {
   dataSource = [];
   sendProducto = false;
   toUpdate = false;
+dataCargada: boolean=false;
   constructor(
     private fb: FormBuilder,
     private snackBar: MatSnackBar,
@@ -252,6 +255,7 @@ export class ProductosComponent implements OnInit, OnDestroy {
               el["imagen"],
             );
           });
+          this.dataCargada=true;
         },
         (error) => {
 
@@ -292,7 +296,7 @@ export class ProductosComponent implements OnInit, OnDestroy {
     this.base64Image = "";
   }
   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    // this.destroy$.next();
+    // this.destroy$.complete();
   }
 }

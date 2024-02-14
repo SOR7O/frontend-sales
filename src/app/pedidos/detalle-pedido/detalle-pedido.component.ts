@@ -41,6 +41,11 @@ export class DetallePedidoComponent implements OnInit {
     'total',
     'confirmado'
   ];
+  displayedTotalColumns = [
+    'totalAmountTitle',
+    'emptyFooter',
+    'emptyFooter'];
+    total:number = 0.0;
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: [],
     public dialog: MatDialog,
@@ -52,6 +57,12 @@ export class DetallePedidoComponent implements OnInit {
   ) { }
   ngOnInit(): void {
     this.typeUser = this.lcstr.getItem('typeUser')
+ 
+    for (let index = 0; index < this.data.length; index++) {
+      let to= parseFloat(this.data[index]['total']['$numberDecimal'])
+      this.total+=to;
+  
+    }
 
   }
   edit(element): void {
@@ -67,11 +78,13 @@ export class DetallePedidoComponent implements OnInit {
         const resultData = temp.find((f) => f["_id"] === element['_id']);
 
         let precio = element['idProducto']['precio']['$numberDecimal'];
-        let calcular = this.cal.calcularTotal(result, precio, 0.15)
+        let imp=element['idProducto']['imp']==undefined?0.0:element['idProducto']['imp']['$numberDecimal']
+        let calcular = this.cal.calcularTotal(result, precio, imp)
         resultData['cantidad'] = result;
         resultData['subtotal'] = calcular['subtotal'];
         resultData['total'] = calcular['total'];
         resultData['impuesto'] = calcular['impuesto'];
+
         this.data = [...this.data]
         this.editar = true;
       }

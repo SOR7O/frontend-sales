@@ -15,6 +15,7 @@ import { DetallePedidoComponent } from './detalle-pedido/detalle-pedido.componen
 import Swal from 'sweetalert2';
 import { ToastrService } from 'ngx-toastr';
 import { LocalService } from '../services/local.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 export interface PedidoShow {
   nameCompany: string,
@@ -31,7 +32,7 @@ export interface PedidoShow {
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
     ]),
   ],
-  imports: [MatTableModule, MatButtonModule, MatIconModule, CommonModule, MatPaginatorModule, MatFormFieldModule, MatInputModule],
+  imports: [MatTableModule, MatProgressSpinnerModule,MatButtonModule, MatIconModule, CommonModule, MatPaginatorModule, MatFormFieldModule, MatInputModule],
   templateUrl: './pedidos.component.html',
   styleUrl: './pedidos.component.css'
 })
@@ -70,12 +71,15 @@ export class PedidosComponent implements OnInit, AfterViewInit {
 
       
     })
+    this.typeUser = this.lcstr.getItem('typeUser')
+    this.displayedColumns[1] = this.typeUser == 1 || this.typeUser == 2 ? 'nombreCliente' : 'nameCompany'
+    
     this.typeUser == 3 ? this.getPedidosByUser() : this.getPedidosByCompany();
 
   }
   ngAfterViewInit() {
-    this.typeUser = this.lcstr.getItem('typeUser')
-    this.displayedColumns[1] = this.typeUser == 1 || this.typeUser == 2 ? 'nombreCliente' : 'nameCompany'
+    // this.typeUser = this.lcstr.getItem('typeUser')
+    // this.displayedColumns[1] = this.typeUser == 1 || this.typeUser == 2 ? 'nombreCliente' : 'nameCompany'
     
 
     // this.pedido.paginator = this.paginator;

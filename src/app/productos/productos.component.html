@@ -80,7 +80,11 @@
 </mat-card>
 
 <div class="mat-elevation-z8 productos">
-    <table mat-table [dataSource]="dataSource">
+    <div *ngIf="!dataCargada">
+
+        <mat-spinner style="margin:0 auto;"></mat-spinner>
+    </div>
+    <table *ngIf="dataCargada" mat-table [dataSource]="dataSource">
         <!-- Nombre Column -->
         <ng-container matColumnDef="acciones">
             <th mat-header-cell *matHeaderCellDef>Acciones</th>

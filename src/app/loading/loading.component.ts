@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-loading',
@@ -9,13 +9,14 @@ import { Component } from '@angular/core';
   styleUrl: './loading.component.css'
 })
 export class LoadingComponent {
+@Input () hide:boolean;
+  isLoading = false;
 
-  isLoading: boolean = true;
+  show() {
+    this.isLoading = true;
+  }
 
-  // Simula la carga de datos
-  simulateDataLoading() {
-    setTimeout(() => {
-      // this.isLoading = false;
-    }, 3000);
+  hideL() {
+    this.isLoading = false;
   }
 }

@@ -33,8 +33,7 @@ export const appConfig: ApplicationConfig = {
 
   // required animations providers
   providers: [
-  
-      
+  importProvidersFrom(MatProgressSpinnerModule),
     // provideClientHydration(),
 
     provideToastr({

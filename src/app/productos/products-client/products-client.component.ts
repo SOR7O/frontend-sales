@@ -9,6 +9,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { SocketServiceService } from "../../socketService/socket-service.service";
 import { Popover } from "bootstrap";
 import { LocalService } from "../../services/local.service";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 interface Products {
   idProducto: string;
@@ -23,7 +24,7 @@ interface Products {
 @Component({
   selector: "app-products-client",
   standalone: true,
-  imports: [MatButtonModule, MatCardModule, CommonModule, MatIconModule],
+  imports: [MatButtonModule, MatCardModule, CommonModule, MatIconModule,MatProgressSpinnerModule],
   templateUrl: "./products-client.component.html",
   styleUrl: "./products-client.component.css",
 })
@@ -40,6 +41,7 @@ export class ProductsClientComponent implements OnInit {
     idCompanie: String;
     data: any[];
   }[];
+  dataCargada:boolean=false;
   constructor(
     private api: ApiService,
     private _sanitazer: DomSanitizer,
@@ -64,7 +66,7 @@ export class ProductsClientComponent implements OnInit {
     let imp = Number(subtotal * _imp);
     let total = Number(imp + subtotal);
     let id = this.tempStorage.getItem('idUser')
-    console.log(imp);
+
     
 
     const prods: Products = {
@@ -84,7 +86,7 @@ export class ProductsClientComponent implements OnInit {
       if (result != undefined) {
         result['cantidad'] += prods['cantidad'];
         result['subtotal'] = result['cantidad'] * precio;
-        result['impuesto'] = result['subtotal'] * 0.15;
+        result['impuesto'] = result['subtotal'] * _imp;
         result['total'] = result['impuesto'] + result['subtotal']
       } else {
         oldPedido.push(prods)
@@ -129,6 +131,7 @@ export class ProductsClientComponent implements OnInit {
                 }
               });
             });
+            this.dataCargada=true;
           }
         },
         (error) => { },
