@@ -105,10 +105,10 @@ export class AppComponent implements  OnInit {
     const ngZone = ɵglobal.Zone;
     if (this.cookie.get("token")) {
       this.headerVisible = true;
-      setTimeout(() => {
-       this. isLoading=false
-      }, 1000);
     }
+    setTimeout(() => {
+     this. isLoading=false
+    }, 1000);
   }
 
   ngOnChanges(changes: SimpleChanges): void {

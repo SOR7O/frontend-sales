@@ -17,6 +17,7 @@ import { NavigationExtras, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
+import { LocalService } from '../services/local.service';
 // import {} from("@angular/material/table")
 @Component({
   selector: 'app-compania',
@@ -54,13 +55,17 @@ export class CompaniaComponent implements OnInit {
     "correo",
     "is_activated"
   ];
-
+typeUser=0;
   dataSource = new MatTableDataSource();
 dataCargada: boolean=false;
-  constructor(private api: ApiService, private router: Router,private toastr:ToastrService) {
+  constructor(private api: ApiService, 
+    private router: Router,
+    private toastr:ToastrService,
+    private localService:LocalService) {
     // this.getCompania();
   }
   ngOnInit(): void {
+    this.typeUser= this.localService.getItem("typeUser")
     this.getCompania();
 
   }

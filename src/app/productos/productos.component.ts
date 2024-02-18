@@ -42,6 +42,7 @@ import {
 import { SocketServiceService } from "../socketService/socket-service.service";
 import { FacturaService } from "../api/factura.service";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { LocalService } from "../services/local.service";
 
 
 
@@ -94,7 +95,8 @@ export class ProductosComponent implements OnInit, OnDestroy {
   dataSource = [];
   sendProducto = false;
   toUpdate = false;
-dataCargada: boolean=false;
+  dataCargada: boolean = false;
+  typeUser = 0  ;
   constructor(
     private fb: FormBuilder,
     private snackBar: MatSnackBar,
@@ -103,7 +105,8 @@ dataCargada: boolean=false;
     public toastr: ToastrService,
     private _sanitazer: DomSanitizer,
     private socket: SocketServiceService,
-    private apiImp: FacturaService
+    private apiImp: FacturaService,
+    private localService:LocalService
   ) {
 
     this.productoForm = this.fb.group({
@@ -122,8 +125,8 @@ dataCargada: boolean=false;
   getImpuestos() {
     this.apiImp.getImpuestos().pipe(take(1)).subscribe((res) => {
       if (res['type'] == "ok" && res['data'].length > 0) {
-        this.imps=[...[]];
-        this.imps= [...res['data']];
+        this.imps = [...[]];
+        this.imps = [...res['data']];
       }
     }, error => {
       this.toastr.error("Ha ocurrido un error al obtener los datos", "Error")
@@ -132,7 +135,7 @@ dataCargada: boolean=false;
   saveProducto() {
     let data = this.productoForm.value;
     console.log(data);
-    
+
     this.sendProducto = true;
     data["imagen"] = this.base64Image;
 
@@ -186,9 +189,11 @@ dataCargada: boolean=false;
   }
 
   ngOnInit(): void {
+    this.typeUser=this.localService.getItem("typeUser");
     this.getProductos();
     this.getImpuestos();
     this.toastr.overlayContainer = this.toastContainer;
+
   }
   delete() {
     this.api
@@ -255,7 +260,7 @@ dataCargada: boolean=false;
               el["imagen"],
             );
           });
-          this.dataCargada=true;
+          this.dataCargada = true;
         },
         (error) => {
 

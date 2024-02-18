@@ -1,6 +1,6 @@
-<app-products-client></app-products-client>
+<app-products-client *ngIf="typeUser==3"></app-products-client>
 
-<mat-card class="container">
+<mat-card class="container" *ngIf="typeUser==2 || typeUser==1">
     <form [formGroup]="productoForm">
         <mat-card-header>
             <mat-card-title>Agregar producto</mat-card-title>
@@ -79,7 +79,7 @@
     </form>
 </mat-card>
 
-<div class="mat-elevation-z8 productos">
+<div class="mat-elevation-z8 productos" *ngIf="typeUser==2 || typeUser==1">
     <div *ngIf="!dataCargada">
 
         <mat-spinner style="margin:0 auto;"></mat-spinner>

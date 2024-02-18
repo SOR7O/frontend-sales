@@ -12,6 +12,7 @@ import { EstablecimientoComponent } from './factura/establecimiento/establecimie
 import { TiposFacturaComponent } from './factura/tipos-factura/tipos-factura.component';
 import { CaiComponent } from './factura/cai/cai.component';
 import { ImpuestoComponent } from './impuesto/impuesto.component';
+import { InventarioComponent } from './inventario/inventario.component';
 
 export const routes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
@@ -26,5 +27,6 @@ export const routes: Routes = [
     { path: 'tipoFactura', component: TiposFacturaComponent, canActivate: [AuthGuard] },
     { path: 'cai', component: CaiComponent, canActivate: [AuthGuard] },
     { path: 'impuesto', component: ImpuestoComponent, canActivate: [AuthGuard] },
+    { path: 'inventario', component: InventarioComponent, canActivate: [AuthGuard] },
 
 ];
