@@ -1,21 +1,29 @@
 <mat-toolbar color="primary" *ngIf="headerVisible">
     <mat-toolbar-row>
-        <button (click)="drawer.toggle()" mat-icon-button>
+        <button (click)="drawer.toggle();opened=!opened" mat-icon-button>
             <mat-icon>menu</mat-icon>
         </button>
         <span>Ventas</span>
         <span class="example-spacer"></span>
 
         <button (click)="openModel()" mat-icon-button>
-            <mat-icon aria-hidden="false" matBadgeColor="accent" matBadge="{{badgeCounter}}"
-                [matBadgeHidden]="badgevisible" matBadgeSize="small">shopping_cart</mat-icon>
+            <mat-icon
+                aria-hidden="false"
+                matBadgeColor="accent"
+                matBadge="{{badgeCounter}}"
+                [matBadgeHidden]="badgevisible"
+                matBadgeSize="small"
+                >shopping_cart</mat-icon
+            >
         </button>
-
+        <button (click)="logout()" mat-icon-button>
+            <mat-icon aria-hidden="false">logout</mat-icon>
+        </button>
     </mat-toolbar-row>
 </mat-toolbar>
 
 <mat-drawer-container autosize>
-    <mat-drawer #drawer [opened]="false" mode="side" position="start" >
+    <mat-drawer #drawer [opened]="opened" mode="side" position="start">
         <mat-nav-list>
             <mat-list-item>
                 <a href="" routerLink="/dashboard"></a>
@@ -39,44 +47,44 @@
             </mat-list-item>
             <mat-list-item>
                 <button routerLink="/clientes" mat-button>
-                    <mat-icon>user</mat-icon> Clientes
+                    <mat-icon>supervised_user_circle</mat-icon> Clientes
                 </button>
             </mat-list-item>
-            <mat-list-item (click)="showSubmenu = !showSubmenu; isShowing= !isShowing" class="parent">
-                <span class="full-width" *ngIf="isExpanded || isShowing"><mat-icon>list_alt</mat-icon> Facturas</span>
+            <mat-list-item
+                (click)="showSubmenu = !showSubmenu; isShowing= !isShowing"
+                class="parent"
+            >
+                <span class="full-width" *ngIf="isExpanded || isShowing"
+                    ><mat-icon>list_alt</mat-icon> Facturas</span
+                >
             </mat-list-item>
-            <div  class="submenu" [ngClass]="{'expanded' : showSubmenu}" *ngIf="isShowing && isExpanded">
-               <mat-list-item>
-
-                   <button routerLink="/cai" mat-button>
-                       <mat-icon>list</mat-icon> Cai
+            <div
+                class="submenu"
+                [ngClass]="{'expanded' : showSubmenu}"
+                *ngIf="isShowing && isExpanded"
+            >
+                <mat-list-item>
+                    <button routerLink="/cai" mat-button>
+                        <mat-icon>list</mat-icon> Cai
                     </button>
                 </mat-list-item>
-                    <mat-list-item>
-
+                <mat-list-item>
                     <button routerLink="/puntoemision" mat-button>
                         <mat-icon>home</mat-icon> Punto Emision
                     </button>
                 </mat-list-item>
                 <mat-list-item>
-
                     <button routerLink="/establecimientoFactura" mat-button>
                         <mat-icon>shopping_cart</mat-icon> Establecimiento
                     </button>
                 </mat-list-item>
                 <mat-list-item>
-
                     <button routerLink="/tipoFactura" mat-button>
                         <mat-icon>folder</mat-icon> Tipo de documento
                     </button>
                 </mat-list-item>
+            </div>
 
-			</div>
-            <!-- <mat-list-item>
-                <button routerLink="/puntoemision" mat-button>
-                    <mat-icon>users</mat-icon> Punto Emision F
-                </button>
-            </mat-list-item> -->
             <mat-list-item>
                 <button routerLink="/productos" mat-button>
                     <mat-icon>inventory</mat-icon> Productos
@@ -97,34 +105,55 @@
     <mat-drawer-content>
         <div style="text-align: start; min-height: 600px">
             <app-loading *ngIf="isLoading"></app-loading>
+
             <router-outlet *ngIf="!isLoading"> </router-outlet>
         </div>
     </mat-drawer-content>
 </mat-drawer-container>
 
-
 <!-- The Modal -->
-<div class="modal bd-example-modal-lg" id="myModalPedido"   tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div
+    class="modal bd-example-modal-lg"
+    id="myModalPedido"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="myLargeModalLabel"
+    aria-hidden="true"
+>
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <!-- Modal Header -->
             <div class="modal-header">
                 <h4 class="modal-title">Confirmar pedido</h4>
-                <button type="button" (click)="CloseModel()" class="btn-close" data-bs-dismiss="modal"></button>
+                <button
+                    type="button"
+                    (click)="CloseModel()"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                ></button>
             </div>
 
             <!-- Modal body -->
             <div class="modal-body">
                 <app-car-pedido></app-car-pedido>
-                
             </div>
 
             <!-- Modal footer -->
             <div class="modal-footer">
-                <button type="button" (click)="confirmar()" class="btn btn-success" data-bs-dismiss="modal">
+                <button
+                    type="button"
+                    (click)="confirmar()"
+                    class="btn btn-success"
+                    data-bs-dismiss="modal"
+                >
                     Confirmar
                 </button>
-                <button type="button" (click)="CloseModel()" class="btn btn-danger" data-bs-dismiss="modal">
+                <button
+                    type="button"
+                    (click)="CloseModel()"
+                    class="btn btn-danger"
+                    data-bs-dismiss="modal"
+                >
                     Close
                 </button>
             </div>

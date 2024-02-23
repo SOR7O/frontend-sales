@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
-import { HttpClient, HttpHeaders, HttpParams,HttpResponse } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from "@angular/common/http";
 import { CookieService } from "ngx-cookie-service";
 import { Component, Inject } from "@angular/core";
 import { CommonModule, DOCUMENT } from "@angular/common";
@@ -12,6 +12,8 @@ import { LocalService } from "../services/local.service";
 export class ApiService {
   public isLoggedInSubject: BehaviorSubject<boolean> =
     new BehaviorSubject<boolean>(false);
+  isLoggedIn: any = 0;
+  reirectUrl: string | null = null; Z
   public isLoggedIn$: Observable<boolean> =
     this.isLoggedInSubject.asObservable();
   // private apiUrl = "http://34.224.221.93:3000/"; // Replace with your API endpoint
@@ -32,7 +34,7 @@ export class ApiService {
   //   idCompania: localStorage?.getItem("idCompania"),
   // };
 
-  date= new Date();
+  date = new Date();
   private headers = new HttpHeaders()
     .set("content-type", "application/json")
     .set("Access-Control-Allow-Origin", "*")
@@ -41,8 +43,8 @@ export class ApiService {
     private http: HttpClient,
     private cookie: CookieService,
     private lsto: LocalService,
-  ) { 
-    if(!this.cookie.check("token")){
+  ) {
+    if (!this.cookie.check("token")) {
       this.cookie.deleteAll();
       this.lsto.removeItem("typeUser")
       this.lsto.removeItem("idUser")
@@ -51,7 +53,9 @@ export class ApiService {
 
   }
 
-
+  logOut(): void {
+    this.isLoggedIn = false;
+}
   public getIsAuth(): Observable<boolean> {
     return this.isLoggedIn$;
   }
@@ -62,6 +66,7 @@ export class ApiService {
       password: password,
     });
   }
+
 
   // CRUD DE ROLES
 
@@ -137,7 +142,7 @@ export class ApiService {
     let idCompania = this.lsto.getItem("idCompania");
     data.idUser = idUser;
     data.idCompania = idCompania;
-    
+
 
     return this.http.post(this.urlProducto + "/addProducto", data, {
       headers: this.headers,
@@ -149,7 +154,7 @@ export class ApiService {
     data["id"] = idCompania;
     let url = this.urlProducto + "/getProductoByCompania";
 
-    
+
 
     return this.http.post<any>(url, data, { headers: this.headers });
   }
@@ -174,10 +179,10 @@ export class ApiService {
     let body = {
       'idUsuario': this.lsto.getItem('idUser'),
       'idCompania': this.lsto.getItem('idCompania'),
-      data:data
+      data: data
 
     }
-    
+
 
     return this.http.post(this.urlPedido + "/addPedido", body, {
       headers: this.headers,
@@ -212,5 +217,5 @@ export class ApiService {
       headers: this.headers,
     });
   }
-  
+
 }

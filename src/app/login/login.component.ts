@@ -48,8 +48,14 @@ export class LoginComponent implements OnInit {
 
 
           if (response['message'] == 'Logged in') {
-            const myDate: Date = new Date();
-            this.cookie.set("token", response["token"],myDate.getHours() + 1 );
+            this.api.isLoggedInSubject.next(true)
+
+
+            var sdate = new Date();
+
+            sdate.setDate(sdate.getDate() + 1);
+
+            this.cookie.set("token", response["token"], { expires: sdate, });
             this.lst.setItem('typeUser', response['typeUser'])
             this.lst.setItem('idUser', response['idUser'])
             this.lst.setItem('idCompania', response['idCompania'])
@@ -57,23 +63,24 @@ export class LoginComponent implements OnInit {
             setTimeout(() => {
               window.location.reload();
             }, 3000);
+            // this.router.navigate(['/'])
             return;
           }
 
-          this.toastr.warning(response['message'],"Warning")
+          this.toastr.warning(response['message'], "Warning")
 
 
-        },error=>{
+        }, error => {
           console.log("error here?");
           console.log(error);
-          
-          this.toastr.error(error['statusText'],"Error")
-          
+
+          this.toastr.error(error['statusText'], "Error")
+
         });
       } catch (e) {
-        
-        
-        this.toastr.error("Ha ocurrido u","Exitosamente")
+
+
+        this.toastr.error("Ha ocurrido u", "Exitosamente")
 
       }
 

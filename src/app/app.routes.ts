@@ -15,11 +15,12 @@ import { ImpuestoComponent } from './impuesto/impuesto.component';
 import { InventarioComponent } from './inventario/inventario.component';
 
 export const routes: Routes = [
-    { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
-    { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
-    { path: 'company', component: CompaniaComponent, canActivate: [AuthGuard] },
-    { path: 'clientes', component: ClientesComponent,canActivate: [AuthGuard] },
-    { path: 'login', component: LoginComponent },
+    { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
+
+    { path: 'login', loadComponent: () => import('./login/login.component').then((m) => m.LoginComponent) },
+    { path: 'dashboard', loadComponent: () => import('./dashboard/dashboard.component').then((m) => m.DashboardComponent), canActivate: [AuthGuard] },
+    { path: 'company', loadComponent: () => import('./compania/compania.component').then((m) => m.CompaniaComponent), canActivate: [AuthGuard] },
+    { path: 'clientes', component: ClientesComponent, canActivate: [AuthGuard] },
     { path: 'productos', component: ProductosComponent, canActivate: [AuthGuard] },
     { path: 'pedidos', component: PedidosComponent, canActivate: [AuthGuard] },
     { path: 'puntoemision', component: PuntoEmisionComponent, canActivate: [AuthGuard] },

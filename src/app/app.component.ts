@@ -25,7 +25,11 @@ import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { MatMenuModule, MatMenuTrigger } from "@angular/material/menu";
-import { MatDrawerContent, MatSidenav, MatSidenavModule } from "@angular/material/sidenav";
+import {
+  MatDrawerContent,
+  MatSidenav,
+  MatSidenavModule,
+} from "@angular/material/sidenav";
 import { MatListModule } from "@angular/material/list";
 import { MatBadgeModule } from "@angular/material/badge";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -34,21 +38,21 @@ import { LoadingComponent } from "./loading/loading.component";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { ToastrService } from "ngx-toastr";
 import { SocketServiceService } from "./socketService/socket-service.service";
-import { MatAccordion, MatExpansionModule } from '@angular/material/expansion'
+import { MatAccordion, MatExpansionModule } from "@angular/material/expansion";
 import { Subject, debounceTime, fromEvent, take } from "rxjs";
 import { CarPedidoComponent } from "./pedidos/car-pedido/car-pedido.component";
 import { ApiService } from "./api/api.service";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 import { LocalService } from "./services/local.service";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 @Component({
   selector: "app-root",
   standalone: true,
-  host: { ngSkipHydration: 'true' },
+  host: { ngSkipHydration: "true" },
   templateUrl: "./app.component.html",
   styleUrl: "./app.component.css",
   imports: [
-
     CommonModule,
     RouterOutlet,
     MatToolbarModule,
@@ -66,14 +70,14 @@ import { LocalService } from "./services/local.service";
     MatFormFieldModule,
     MatExpansionModule,
     CarPedidoComponent,
-    MatDrawerContent
+    MatDrawerContent,
   ],
 })
-export class AppComponent implements  OnInit {
-  @Output () noShowLoading= new EventEmitter<boolean>()
+export class AppComponent implements OnInit {
+  @Output() noShowLoading = new EventEmitter<boolean>();
   toUpdate: boolean;
 
-  @ViewChild('sidenav') sidenav: MatSidenav;
+  @ViewChild("sidenav") sidenav: MatSidenav;
   isExpanded = true;
   showSubmenu: boolean = false;
   isShowing = false;
@@ -84,14 +88,12 @@ export class AppComponent implements  OnInit {
   badgevisible = false;
   headerVisible = false;
   badgeCounter = 0;
-  isLoading=true;
+  isLoading = true;
 
   private ngZone = inject(NgZone);
+  opened: boolean = false;
 
-
-  ngAfterViewInit() {
-
-  }
+  ngAfterViewInit() {}
 
   constructor(
     private router: Router,
@@ -99,44 +101,36 @@ export class AppComponent implements  OnInit {
     private toastr: ToastrService,
     private serLocal: LocalService,
     private socketService: SocketServiceService,
-    private service: ApiService
+    private service: ApiService,
   ) {
-
     const ngZone = ɵglobal.Zone;
     if (this.cookie.get("token")) {
-      this.headerVisible = true;
+      // this.headerVisible = true;
     }
     setTimeout(() => {
-     this. isLoading=false
+      this.isLoading = false;
     }, 1000);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-
-    let count: [] = this.serLocal.getItem('pedido');
+    let count: [] = this.serLocal.getItem("pedido");
     this.badgeCounter = count != undefined ? count.length : 0;
-
   }
-  disabledLoading(){
+  disabledLoading() {
     this.noShowLoading.emit(false);
   }
   ngOnInit(): void {
-
-
     if (this.cookie.get("token")) {
       this.headerVisible = true;
-      let count: [] = this.serLocal.getItem('pedido');
+      let count: [] = this.serLocal.getItem("pedido");
       this.badgeCounter = count != undefined ? count.length : 0;
       this.socketService.connect();
       this.socketService.listenPedidos().subscribe((val) => {
         this.badgeCounter = val;
-
-      })
+      });
     }
   }
   badgevisibility() {
-
-
     this.badgevisible = true;
     // this.socketService.test()
   }
@@ -144,23 +138,26 @@ export class AppComponent implements  OnInit {
     const modelDiv = document.getElementById("myModalPedido");
     if (modelDiv != null) {
       modelDiv.style.display = "none";
-
     }
   }
   confirmar() {
-    let pedido = this.serLocal.getItem('pedido');
-    this.service.createPedido(pedido).pipe(take(1)).subscribe((resp) => {
-
-      if (resp['type'] == "ok") {
-        this.toastr.success("Pedido enviado");
-        this.socketService.test(0);
-        this.CloseModel();
-        this.serLocal.removeItem('pedido');
-      }
-    }, error => {
-      this.toastr.error(error['statusText'], "Error")
-
-    });
+    let pedido = this.serLocal.getItem("pedido");
+    this.service
+      .createPedido(pedido)
+      .pipe(take(1))
+      .subscribe(
+        (resp) => {
+          if (resp["type"] == "ok") {
+            this.toastr.success("Pedido enviado");
+            this.socketService.test(0);
+            this.CloseModel();
+            this.serLocal.removeItem("pedido");
+          }
+        },
+        (error) => {
+          this.toastr.error(error["statusText"], "Error");
+        },
+      );
   }
   openModel() {
     const modelDiv = document.getElementById("myModalPedido");
@@ -170,7 +167,6 @@ export class AppComponent implements  OnInit {
   }
   cancelarUpdate() {
     this.toUpdate = false;
-
   }
   mouseenter() {
     if (!this.isExpanded) {
@@ -182,5 +178,12 @@ export class AppComponent implements  OnInit {
     if (!this.isExpanded) {
       this.isShowing = false;
     }
+  }
+  logout() {
+    this.cookie.deleteAll();
+    this.serLocal.clear();
+    this.router.navigate(["/login"]);
+    this.headerVisible = false;
+    this.opened = false;
   }
 }

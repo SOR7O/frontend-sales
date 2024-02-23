@@ -1,8 +1,16 @@
 {
   "routes": [
+    "/cai",
     "/clientes",
     "/company",
     "/dashboard",
-    "/login"
+    "/establecimientoFactura",
+    "/impuesto",
+    "/inventario",
+    "/login",
+    "/pedidos",
+    "/productos",
+    "/puntoemision",
+    "/tipoFactura"
   ]
 }

@@ -266,9 +266,9 @@ export class ProductosComponent implements OnInit, OnDestroy {
 
 
           if (error["statusText"] == "Unauthorized") {
-            this.cookie.deleteAll();
-            localStorage.clear();
-            window.location.reload();
+            // this.cookie.deleteAll();
+            // localStorage.clear();
+            // window.location.reload();
           }
         },
       );
