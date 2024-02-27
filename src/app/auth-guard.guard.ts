@@ -1,40 +1,37 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, CanActivateFn, Router, RouterStateSnapshot } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { HttpClient, HttpResponse } from '@angular/common/http'
 import { ApiService } from './api/api.service';
+import { DomainServiceService } from './domainService/domain-service.service';
+import { tap } from 'rxjs';
+import { isPlatformBrowser } from '@angular/common';
 
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
-  constructor(private router: Router, private cookie: CookieService, private api:ApiService ) { }
-  canActivate(
-    next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): boolean {
-
-      console.log(this.api.isLoggedInSubject.getValue());
-      
-  
+  couter = 0;
+  constructor(private router: Router, private cookie: CookieService, private domainService: DomainServiceService,@Inject(PLATFORM_ID) private platformId: any) { }
+  canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     let token = this.cookie.get("token")
-    console.log(token.length);
-    console.log(token.length>0);
+    // this.isAuthorized();
     
-    let existToken=token.length>0?true:false;
-    console.log(existToken);
-    console.log(!existToken);
     
-    if(!existToken){
-      // this.router.navigate(['/login']);
-      console.log("seeee");
-      
-      this.router.navigate(['/login'])
-      return false
-      
-    }
+    if(!token && !isPlatformBrowser(this.platformId)){
+    
+    return true;
+    };
+    return this.domainService.isAvailable().pipe(
+      tap((value) => {
+        this.couter++
+        !value ? (this.router.navigate(['/login'])) : false;
 
+        return value
 
-    return existToken;
+      }
+      ))
+
   }
 }

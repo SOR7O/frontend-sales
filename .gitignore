@@ -7,6 +7,9 @@
 
 # Node
 /node_modules
+/dist
+./dist
+dist
 npm-debug.log
 yarn-error.log
 
@@ -20,6 +23,7 @@ yarn-error.log
 *.sublime-workspace
 dist
 ./dist
+
 
 # Visual Studio Code
 .vscode/*

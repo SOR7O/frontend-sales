@@ -58,6 +58,7 @@ export class CompaniaComponent implements OnInit {
 typeUser=0;
   dataSource = new MatTableDataSource();
 dataCargada: boolean=false;
+toSave:boolean=false;
   constructor(private api: ApiService, 
     private router: Router,
     private toastr:ToastrService,
@@ -98,12 +99,14 @@ dataCargada: boolean=false;
 
   }
   onSubmit() {
+    this.toSave=true;
     if (!this.update) {
 
       this.api.createCompania(this.companyForm.value).pipe(take(1)).subscribe((response) => {
 
         this.companyForm.reset();
         this.toastr.success("Creado exitosamente","Exitosamente")
+        this.toSave=false;
 
 
       },error=>{
@@ -116,6 +119,7 @@ dataCargada: boolean=false;
         this.toastr.success("Creado exitosamente","Exitosamente")
 
       },error=>{
+        this.toSave=false;
         this.toastr.error(error['statusText'],"Error")
       })
     }

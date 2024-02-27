@@ -9,8 +9,10 @@ import { LocalService } from '../services/local.service';
 })
 export class FacturaService {
 
-  private apiUrl = "http://localhost:3000/facturas/";
-  private apiUrlImp = "http://localhost:3000/impuesto/";
+  private apiUrl = "https://backend-sales-8ax7.onrender.com/facturas/";
+  // private apiUrl = "http://localhost:3000/facturas/";
+  private apiUrlImp = "https://backend-sales-8ax7.onrender.com/impuesto/";
+  // private apiUrlImp = "http://localhost:3000/impuesto/";
   public token = this.cookie.get("token");
   httpOptions = {
     headers: new HttpHeaders({
@@ -136,7 +138,9 @@ export class FacturaService {
 
   getImpuestos(): Observable<any> {
     let url = this.apiUrlImp + 'getImpuestos';
-    return this.http.post(url, null, this.httpOptions);
+
+    
+    return this.http.post(url, {getImp:true}, this.httpOptions);
   }
   updateImpuesto(id: string, data: any): Observable<any> {
     let apiUrl = this.apiUrlImp + 'updateImpuestoById';

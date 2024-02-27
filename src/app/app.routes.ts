@@ -1,33 +1,26 @@
 import { Routes } from '@angular/router';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { LoginComponent } from './login/login.component';
-import { AuthGuard } from './auth-guard.guard';
-import { CompaniaComponent } from './compania/compania.component';
-import { LoadingComponent } from './loading/loading.component';
-import { ClientesComponent } from './clientes/clientes.component';
-import { ProductosComponent } from './productos/productos.component';
-import { PedidosComponent } from './pedidos/pedidos.component';
-import { PuntoEmisionComponent } from './factura/punto-emision/punto-emision.component';
-import { EstablecimientoComponent } from './factura/establecimiento/establecimiento.component';
-import { TiposFacturaComponent } from './factura/tipos-factura/tipos-factura.component';
-import { CaiComponent } from './factura/cai/cai.component';
-import { ImpuestoComponent } from './impuesto/impuesto.component';
-import { InventarioComponent } from './inventario/inventario.component';
+import { AuthGuard ,} from './auth-guard.guard';
+
 
 export const routes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
-
-    { path: 'login', loadComponent: () => import('./login/login.component').then((m) => m.LoginComponent) },
     { path: 'dashboard', loadComponent: () => import('./dashboard/dashboard.component').then((m) => m.DashboardComponent), canActivate: [AuthGuard] },
     { path: 'company', loadComponent: () => import('./compania/compania.component').then((m) => m.CompaniaComponent), canActivate: [AuthGuard] },
-    { path: 'clientes', component: ClientesComponent, canActivate: [AuthGuard] },
-    { path: 'productos', component: ProductosComponent, canActivate: [AuthGuard] },
-    { path: 'pedidos', component: PedidosComponent, canActivate: [AuthGuard] },
-    { path: 'puntoemision', component: PuntoEmisionComponent, canActivate: [AuthGuard] },
-    { path: 'establecimientoFactura', component: EstablecimientoComponent, canActivate: [AuthGuard] },
-    { path: 'tipoFactura', component: TiposFacturaComponent, canActivate: [AuthGuard] },
-    { path: 'cai', component: CaiComponent, canActivate: [AuthGuard] },
-    { path: 'impuesto', component: ImpuestoComponent, canActivate: [AuthGuard] },
-    { path: 'inventario', component: InventarioComponent, canActivate: [AuthGuard] },
+    { path: 'clientes', loadComponent: () => import('./clientes/clientes.component').then((m) => m.ClientesComponent), canActivate: [AuthGuard] },
+    { path: 'productos', loadComponent: () => import('./productos/productos.component').then((m) => m.ProductosComponent), canActivate: [AuthGuard] },
+    { path: 'pedidos', loadComponent: () => import('./pedidos/pedidos.component').then((m) => m.PedidosComponent), canActivate: [AuthGuard] },
+    {
+        path: 'factura', children: [
+            { path: 'establecimientoFactura', loadComponent: () => import('./factura/establecimiento/establecimiento.component').then((m) => m.EstablecimientoComponent), canActivate: [AuthGuard] },
+            { path: 'tipoFactura', loadComponent: () => import('./factura/tipos-factura/tipos-factura.component').then((m) => m.TiposFacturaComponent), canActivate: [AuthGuard] },
+            { path: 'puntoemision', loadComponent: () => import('./factura/punto-emision/punto-emision.component').then((m) => m.PuntoEmisionComponent), canActivate: [AuthGuard] },
+            { path: 'cai', loadComponent: () => import('./factura/cai/cai.component').then((m) => m.CaiComponent), canActivate: [AuthGuard] },
+
+        ]
+    },
+    { path: 'impuesto', loadComponent: () => import('./impuesto/impuesto.component').then((m) => m.ImpuestoComponent), canActivate: [AuthGuard] },
+    { path: 'inventario', loadComponent: () => import('./inventario/inventario.component').then((m) => m.InventarioComponent), canActivate: [AuthGuard] },
+    { path: 'login', loadComponent: () => import('./login/login.component').then((m) => m.LoginComponent) },
+    // {path:'**', redirectTo:'/login'}
 
 ];

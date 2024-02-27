@@ -29,6 +29,7 @@ import { MatBadgeModule } from "@angular/material/badge";
 import { CommonModule } from "@angular/common";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import {NativeDateAdapter} from '@angular/material/core';
+
 export const appConfig: ApplicationConfig = {
 
   // required animations providers

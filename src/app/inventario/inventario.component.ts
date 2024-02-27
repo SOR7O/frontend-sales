@@ -5,8 +5,8 @@ import {
   transition,
   trigger,
 } from "@angular/animations";
-import { CommonModule } from "@angular/common";
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { CommonModule, isPlatformBrowser } from "@angular/common";
+import { Component, Inject, OnInit, PLATFORM_ID, ViewChild } from "@angular/core";
 import {
   FormBuilder,
   FormGroup,
@@ -116,6 +116,7 @@ export class InventarioComponent implements OnInit {
     private apiProd: ApiService,
     private fb: FormBuilder,
     private toastr: ToastrService,
+    @Inject(PLATFORM_ID) private platformId: any
   ) {
     this.invForm = this.fb.group({
       _id: [""],
@@ -131,6 +132,7 @@ export class InventarioComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if(!(isPlatformBrowser(this.platformId)))return;
     this.getInventarios();
     // this.dataSource.push({ 'cantidad': '0', 'producto': '0' })
     this.getProductosByCompania();

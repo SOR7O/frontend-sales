@@ -39,12 +39,14 @@ import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { ToastrService } from "ngx-toastr";
 import { SocketServiceService } from "./socketService/socket-service.service";
 import { MatAccordion, MatExpansionModule } from "@angular/material/expansion";
-import { Subject, debounceTime, fromEvent, take } from "rxjs";
+import { Subject, debounceTime, fromEvent, take, tap } from "rxjs";
 import { CarPedidoComponent } from "./pedidos/car-pedido/car-pedido.component";
 import { ApiService } from "./api/api.service";
 import Swal from "sweetalert2";
 import { LocalService } from "./services/local.service";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { DashboardComponent } from "./dashboard/dashboard.component";
+import { DomainServiceService } from "./domainService/domain-service.service";
 
 @Component({
   selector: "app-root",
@@ -102,14 +104,14 @@ export class AppComponent implements OnInit {
     private serLocal: LocalService,
     private socketService: SocketServiceService,
     private service: ApiService,
+    private dService:DomainServiceService
   ) {
+    
     const ngZone = ɵglobal.Zone;
     if (this.cookie.get("token")) {
       // this.headerVisible = true;
     }
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 1000);
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -120,6 +122,8 @@ export class AppComponent implements OnInit {
     this.noShowLoading.emit(false);
   }
   ngOnInit(): void {
+    
+    if(this.router.url===('/') )return;
     if (this.cookie.get("token")) {
       this.headerVisible = true;
       let count: [] = this.serLocal.getItem("pedido");
@@ -186,4 +190,19 @@ export class AppComponent implements OnInit {
     this.headerVisible = false;
     this.opened = false;
   }
+  onOutletLoaded(component: DashboardComponent) {
+    
+    
+    if(this.router.url===('/login' || '/') )return;
+    if (this.cookie.get("token")) {
+      this.headerVisible = true;
+      let count: [] = this.serLocal.getItem("pedido");
+      this.badgeCounter = count != undefined ? count.length : 0;
+      this.socketService.connect();
+      this.socketService.listenPedidos().subscribe((val) => {
+        this.badgeCounter = val;
+      });
+    }
+    // component.someProperty = 'someValue';
+}
 }

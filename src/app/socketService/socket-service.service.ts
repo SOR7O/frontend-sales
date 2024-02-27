@@ -9,7 +9,8 @@ import { ObserversModule } from '@angular/cdk/observers';
 export class SocketServiceService {
   private socket: Socket;
 
-  private server = "http://localhost:3000";
+  // private server = "http://localhost:3000";
+  private server = "https://backend-sales-8ax7.onrender.com/";
   constructor(private appRef: ApplicationRef) {
   }
 
@@ -38,7 +39,7 @@ export class SocketServiceService {
     });
   }
   listenConfirmarPedido(){
-    if(!this.socket)return null;
+    if(!this.socket)return new Observable((sus)=>sus.next(false));
     return new Observable((subscribe) => {
       this.socket.on("Pedidoconfirmado", (valor) => {
         subscribe.next(valor);

@@ -8,7 +8,8 @@ import { Observable } from "rxjs";
   providedIn: "root",
 })
 export class InventarioService {
-  private apiUrl = "http://localhost:3000/inventario/";
+  private apiUrl = "https://backend-sales-8ax7.onrender.com/inventario/";
+  // private apiUrl = "http://localhost:3000/inventario/";
 
   public token = this.cookie.get("token");
   httpOptions = {
