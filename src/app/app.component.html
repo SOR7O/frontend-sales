@@ -1,4 +1,3 @@
-
 <mat-toolbar color="primary" *ngIf="headerVisible">
     <mat-toolbar-row>
         <button (click)="drawer.toggle();opened=!opened" mat-icon-button>
@@ -65,6 +64,11 @@
                 *ngIf="isShowing && isExpanded"
             >
                 <mat-list-item>
+                    <button routerLink="/factura/facturas" mat-button>
+                        <mat-icon>list</mat-icon> Facturas
+                    </button>
+                </mat-list-item>
+                <mat-list-item>
                     <button routerLink="/factura/cai" mat-button>
                         <mat-icon>list</mat-icon> Cai
                     </button>
@@ -75,7 +79,10 @@
                     </button>
                 </mat-list-item>
                 <mat-list-item>
-                    <button routerLink="/factura/establecimientoFactura" mat-button>
+                    <button
+                        routerLink="/factura/establecimientoFactura"
+                        mat-button
+                    >
                         <mat-icon>shopping_cart</mat-icon> Establecimiento
                     </button>
                 </mat-list-item>
@@ -108,7 +115,7 @@
         <div style="text-align: start; min-height: 600px">
             <!-- <app-loading *ngIf="isLoading"></app-loading> -->
 
-            <router-outlet  (activate)="onOutletLoaded($event)"> </router-outlet>
+            <router-outlet (activate)="onOutletLoaded($event)"> </router-outlet>
         </div>
     </mat-drawer-content>
 </mat-drawer-container>
@@ -119,7 +126,7 @@
         </div>
         <!-- <div class="mx-auto">Copyrigth asodev</div> -->
     </mat-toolbar-row>
-  </mat-toolbar>
+</mat-toolbar>
 
 <!-- The Modal -->
 <div

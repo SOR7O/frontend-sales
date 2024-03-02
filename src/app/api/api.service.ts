@@ -1,6 +1,11 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, tap } from "rxjs";
-import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from "@angular/common/http";
+import {
+  HttpClient,
+  HttpHeaders,
+  HttpParams,
+  HttpResponse,
+} from "@angular/common/http";
 import { CookieService } from "ngx-cookie-service";
 import { Component, Inject } from "@angular/core";
 import { CommonModule, DOCUMENT } from "@angular/common";
@@ -13,13 +18,13 @@ export class ApiService {
   public isLoggedInSubject: BehaviorSubject<boolean> =
     new BehaviorSubject<boolean>(false);
   isLoggedIn: any = 0;
-  reirectUrl: string | null = null; 
+  reirectUrl: string | null = null;
 
   private authState = new BehaviorSubject<any | null>(null);
   authState$ = this.authState.asObservable();
   // private apiUrl = "http://34.224.221.93:3000/"; // Replace with your API endpoint
-  private apiUrl = "https://backend-sales-8ax7.onrender.com/"; // Replace with your API endpoint
-  // private apiUrl = "http://localhost:3000/"; // Replace with your API endpoint
+  // private apiUrl = "https://backend-sales-8ax7.onrender.com/"; // Replace with your API endpoint
+  private apiUrl = "http://localhost:3000/"; // Replace with your API endpoint
   private urlProducto = this.apiUrl + "producto";
   private urlPedido = this.apiUrl + "pedido";
   public token = this.cookie.get("token");
@@ -46,33 +51,29 @@ export class ApiService {
     private cookie: CookieService,
     private lsto: LocalService,
   ) {
-
-    this.token= this.cookie.get("token");
+    this.token = this.cookie.get("token");
     if (!this.cookie.check("token")) {
       this.cookie.deleteAll();
-      this.lsto.removeItem("typeUser")
-      this.lsto.removeItem("idUser")
-      this.lsto.removeItem("idCompania")
+      this.lsto.removeItem("typeUser");
+      this.lsto.removeItem("idUser");
+      this.lsto.removeItem("idCompania");
     }
-
   }
 
   logOut(): void {
     this.isLoggedIn = false;
-}
+  }
 
-setAuthState(user: any | null) {
-  this.authState.next(user);
-}
+  setAuthState(user: any | null) {
+    this.authState.next(user);
+  }
   // Peticiones de usuarios
   login(username, password): Observable<any> {
-    
     return this.http.post<any>(`${this.apiUrl}user/login`, {
       username: username,
       password: password,
-    })
+    });
   }
-
 
   // CRUD DE ROLES
 
@@ -94,17 +95,33 @@ setAuthState(user: any | null) {
 
   // Peticiones de companias
   getCompanias(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}compania/getCompanias`, this.httpOptions);
+    return this.http.post<any>(
+      `${this.apiUrl}compania/getCompanias`,
+      { body: null },
+      this.httpOptions,
+    );
   }
 
   createCompania(data) {
-    return this.http.post(this.apiUrl + "compania/createCompania", data, this.httpOptions);
+    return this.http.post(
+      this.apiUrl + "compania/createCompania",
+      data,
+      this.httpOptions,
+    );
   }
   updateCompania(data) {
-    return this.http.post(this.apiUrl + "compania/updateCompania", data, this.httpOptions);
+    return this.http.post(
+      this.apiUrl + "compania/updateCompania",
+      data,
+      this.httpOptions,
+    );
   }
   deleteCompania(data) {
-    return this.http.post(this.apiUrl + "compania/deleteCompania", data, this.httpOptions);
+    return this.http.post(
+      this.apiUrl + "compania/deleteCompania",
+      data,
+      this.httpOptions,
+    );
   }
 
   // PETICIONES CRUD USUARIOS POR COMPANIA
@@ -117,13 +134,25 @@ setAuthState(user: any | null) {
   }
 
   addUsuario(data) {
-    return this.http.post(this.apiUrl + "user/createUser", data, this.httpOptions);
+    return this.http.post(
+      this.apiUrl + "user/createUser",
+      data,
+      this.httpOptions,
+    );
   }
   updateUsuario(data) {
-    return this.http.post(this.apiUrl + "user/updateUser", data, this.httpOptions);
+    return this.http.post(
+      this.apiUrl + "user/updateUser",
+      data,
+      this.httpOptions,
+    );
   }
   deleteUsuario(data) {
-    return this.http.post(this.apiUrl + "user/deleteUser", data, this.httpOptions);
+    return this.http.post(
+      this.apiUrl + "user/deleteUser",
+      data,
+      this.httpOptions,
+    );
   }
 
   //
@@ -133,11 +162,13 @@ setAuthState(user: any | null) {
     data.idUser = idUser;
     data.idCompania = idCompania;
 
-
-    return this.http.post(this.urlProducto + "/addProducto", data, this.httpOptions);
+    return this.http.post(
+      this.urlProducto + "/addProducto",
+      data,
+      this.httpOptions,
+    );
   }
   getProductoByCompania(data): Observable<any> {
-
     let idCompania = this.lsto.getItem("idCompania");
     data["id"] = idCompania;
     let url = this.urlProducto + "/getProductoByCompania";
@@ -162,35 +193,55 @@ setAuthState(user: any | null) {
   //CRUD PEDIDOS
   createPedido(data) {
     let body = {
-      'idUsuario': this.lsto.getItem('idUser'),
-      'idCompania': this.lsto.getItem('idCompania'),
-      data: data
+      idUsuario: this.lsto.getItem("idUser"),
+      idCompania: this.lsto.getItem("idCompania"),
+      data: data,
+    };
 
-    }
-
-
-    return this.http.post(this.urlPedido + "/addPedido", body, this.httpOptions);
+    return this.http.post(
+      this.urlPedido + "/addPedido",
+      body,
+      this.httpOptions,
+    );
   }
   getPedidosByUser(): Observable<any> {
-    let id = this.lsto.getItem("idUser")
-    let data = { id: id }
-    return this.http.post<any>(this.urlPedido + "/getPedidosByUser", data, this.httpOptions);
+    let id = this.lsto.getItem("idUser");
+    let data = { id: id };
+    return this.http.post<any>(
+      this.urlPedido + "/getPedidosByUser",
+      data,
+      this.httpOptions,
+    );
   }
   getPedidosByCompania(): Observable<any> {
-    let id = this.lsto.getItem("idCompania")
-    let data = { id: id }
+    let id = this.lsto.getItem("idCompania");
+    let data = { id: id };
 
-    
-    return this.http.post(this.urlPedido + "/getPedidosByCompania", data, this.httpOptions);
+    return this.http.post(
+      this.urlPedido + "/getPedidosByCompania",
+      data,
+      this.httpOptions,
+    );
   }
   updatePedido(data): Observable<any> {
-    return this.http.post(this.urlPedido + "/updatePedido", data, this.httpOptions);
+    return this.http.post(
+      this.urlPedido + "/updatePedido",
+      data,
+      this.httpOptions,
+    );
   }
   updatePedidoEstado(data): Observable<any> {
-    return this.http.post(this.urlPedido + "/updatePedidoEstado", data, this.httpOptions);
+    return this.http.post(
+      this.urlPedido + "/updatePedidoEstado",
+      data,
+      this.httpOptions,
+    );
   }
   delete(data): Observable<any> {
-    return this.http.post(this.urlPedido + "/deletePedido", data, this.httpOptions);
+    return this.http.post(
+      this.urlPedido + "/deletePedido",
+      data,
+      this.httpOptions,
+    );
   }
-
 }

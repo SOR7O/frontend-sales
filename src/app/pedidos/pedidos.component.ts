@@ -16,6 +16,7 @@ import Swal from 'sweetalert2';
 import { ToastrService } from 'ngx-toastr';
 import { LocalService } from '../services/local.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { PdfService } from '../pdf/pdf.service';
 
 export interface PedidoShow {
   nameCompany: string,
@@ -32,7 +33,7 @@ export interface PedidoShow {
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
     ]),
   ],
-  imports: [MatTableModule, MatProgressSpinnerModule,MatButtonModule, MatIconModule, CommonModule, MatPaginatorModule, MatFormFieldModule, MatInputModule],
+  imports: [MatTableModule, MatProgressSpinnerModule, MatButtonModule, MatIconModule, CommonModule, MatPaginatorModule, MatFormFieldModule, MatInputModule],
   templateUrl: './pedidos.component.html',
   styleUrl: './pedidos.component.css'
 })
@@ -59,28 +60,29 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   expandedElement: PedidoShow | null;
 
   constructor(
-    private service: ApiService, 
-    private socket: SocketServiceService, 
-    private lcstr: LocalService, 
+    private service: ApiService,
+    private socket: SocketServiceService,
+    private lcstr: LocalService,
     private dialog: MatDialog,
-    private toastr: ToastrService,) { }
+    private toastr: ToastrService,
+    private gpdf: PdfService) { }
 
   ngOnInit(): void {
 
     this.socket.listenConfirmarPedido().subscribe((pedido) => {
 
-      
+
     })
     this.typeUser = this.lcstr.getItem('typeUser')
     this.displayedColumns[1] = this.typeUser == 1 || this.typeUser == 2 ? 'nombreCliente' : 'nameCompany'
-    
+
     this.typeUser == 3 ? this.getPedidosByUser() : this.getPedidosByCompany();
 
   }
   ngAfterViewInit() {
     // this.typeUser = this.lcstr.getItem('typeUser')
     // this.displayedColumns[1] = this.typeUser == 1 || this.typeUser == 2 ? 'nombreCliente' : 'nameCompany'
-    
+
 
     // this.pedido.paginator = this.paginator;
   }
@@ -97,7 +99,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
 
   getPedidosByUser() {
     this.service.getPedidosByUser().pipe(take(1)).subscribe((resp) => {
-      
+
 
       if (resp['type'] == "ok" && resp['data']) {
         this.dataSource = [];
@@ -123,8 +125,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       }
     }, error => {
 
-      this.toastr.error(error['statusText'],"Error")
-      
+      this.toastr.error(error['statusText'], "Error")
+
     })
 
   }
@@ -155,19 +157,23 @@ export class PedidosComponent implements OnInit, AfterViewInit {
         // this.dataSource = [...resp['data']];
       }
     }, error => {
-      this.toastr.error(error['statusText'],"Error")
-      
+      this.toastr.error(error['statusText'], "Error")
+
     })
   }
 
   openDialog(element) {
+    console.log(element);
+
     const dialogRef = this.dialog.open(DetallePedidoComponent, {
-      data: element['detalle']
+      data: { data: element['detalle'], pedido: element['pedido'] },
+
     });
     dialogRef.afterClosed().subscribe(result => {
-      
+
     })
 
   }
+
 
 }

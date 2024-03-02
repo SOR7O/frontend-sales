@@ -72,7 +72,6 @@ import { DomainServiceService } from "./domainService/domain-service.service";
     MatFormFieldModule,
     MatExpansionModule,
     CarPedidoComponent,
-    MatDrawerContent,
   ],
 })
 export class AppComponent implements OnInit {
